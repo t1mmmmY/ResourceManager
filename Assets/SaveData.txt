@@ -185,6 +185,126 @@
 					}
 				}
 			}
+		},
+		"childAssetItems_2":{
+			"AssetItem":{
+				"name":"NotNeed 1",
+				"path":"Assets/Resources/NotNeed 1",
+				"tempPath":"",
+				"enabled":false,
+				"opened":true,
+				"isFolder":true,
+				"childAssetItems_0":{
+					"AssetItem":{
+						"name":"1D4_2575 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/1D4_2575 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_1":{
+					"AssetItem":{
+						"name":"5dr1LI4ebUE 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/5dr1LI4ebUE 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_2":{
+					"AssetItem":{
+						"name":"5hfBPeSwFoM 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/5hfBPeSwFoM 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_3":{
+					"AssetItem":{
+						"name":"11737975_890695427668489_1019718546073512846_n 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/11737975_890695427668489_1019718546073512846_n 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_4":{
+					"AssetItem":{
+						"name":"gBS5de2qVxo 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/gBS5de2qVxo 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_5":{
+					"AssetItem":{
+						"name":"ILdnXiW2Zps 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/ILdnXiW2Zps 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_6":{
+					"AssetItem":{
+						"name":"IMG_20140517_130421 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/IMG_20140517_130421 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_7":{
+					"AssetItem":{
+						"name":"IMG_20140517_130448 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/IMG_20140517_130448 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_8":{
+					"AssetItem":{
+						"name":"pBPZIE0vmlo 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/pBPZIE0vmlo 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_9":{
+					"AssetItem":{
+						"name":"u6zfNpC24Ug 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/u6zfNpC24Ug 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_10":{
+					"AssetItem":{
+						"name":"z1yWDtvkZ_0 1.jpg",
+						"path":"Assets/Resources/NotNeed 1/z1yWDtvkZ_0 1.jpg",
+						"tempPath":"",
+						"enabled":false,
+						"opened":true,
+						"isFolder":false
+					}
+				}
+			}
 		}
 	}
 },
@@ -198,10 +318,10 @@
 		"isFolder":true,
 		"childAssetItems_0":{
 			"AssetItem":{
-				"name":"New Animation.anim",
-				"path":"Assets/Standart/Resources/New Animation.anim",
+				"name":"New Prefab.prefab",
+				"path":"Assets/Standart/Resources/New Prefab.prefab",
 				"tempPath":"",
-				"enabled":false,
+				"enabled":true,
 				"opened":true,
 				"isFolder":false
 			}

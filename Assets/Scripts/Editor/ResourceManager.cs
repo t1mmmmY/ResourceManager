@@ -22,6 +22,8 @@ public class ResourceManager : EditorWindow
 
 	bool init = false;
 
+	Vector2 scrollPosition = Vector2.zero;
+
 	[MenuItem("Window/Resource Manager")]
 	static void Init() 
 	{
@@ -152,27 +154,37 @@ public class ResourceManager : EditorWindow
 			changed = false;
 			toggleRect = new Rect(3, 3, 15, 15);
 
-			//Draw root resources folders
-			foreach (AssetItem item in assets)
+
+			int countItems = GetAllItems(assets, true).Length;
+			scrollPosition = GUI.BeginScrollView(new Rect(0, 0, position.width, position.height), 
+			                                     scrollPosition, 
+			                                     new Rect(0, 0, position.width - 20, countItems * 20));
 			{
-				float oldX = toggleRect.x;
-				DrawAssets(item, false);
-				toggleRect.x = oldX;
-				toggleRect.y += 18;
+				//Draw root resources folders
+				foreach (AssetItem item in assets)
+				{
+					float oldX = toggleRect.x;
+					DrawAssets(item, false);
+					toggleRect.x = oldX;
+					toggleRect.y += 18;
+				}
 			}
+			GUI.EndScrollView();
 
 			if (changed)
 			{
+				Debug.Log("SAVE DATA on change");
 				SaveData();
 			}
 		}
 
+
 		if (!cleared)
 		{
-			if (GUI.Button(new Rect(position.width - 90, position.height - 120, 80, 30), "Load Data"))
-			{
-				LoadData();
-			}
+//			if (GUI.Button(new Rect(position.width - 90, position.height - 130, 80, 30), "Load Data"))
+//			{
+//				LoadData();
+//			}
 
 			if (GUI.Button(new Rect(position.width - 90, position.height - 40, 80, 30), "Refresh"))
 			{
@@ -282,31 +294,56 @@ public class ResourceManager : EditorWindow
 		}
 
 		AssetDatabase.Refresh();
+		Debug.Log("SAVE DATA on hide assets");
+		SaveData();
 
 		cleared = true;
 	}
 	
 	void RestoreUnusedAssets()
 	{
+		LoadData();
 		AssetItem[] allAssets = GetAllItems(assets);
-		List<AssetItem> unusedAssets = new List<AssetItem>();
+//		List<AssetItem> unusedAssets = new List<AssetItem>();
 		
 		foreach (AssetItem item in allAssets)
 		{
 			if (!item.enabled)
 			{
-				unusedAssets.Add(item);
-//				Debug.Log(item.ToString());
-
+//				unusedAssets.Add(item);
+				//				Debug.Log(item.ToString());
+				
 				AssetDatabase.MoveAsset(item.tempPath, item.path);
 				item.tempPath = "";
 			}
 		}
-
+		
 		AssetDatabase.DeleteAsset(tempFolderPath.Remove(tempFolderPath.Length - 1));
 		AssetDatabase.Refresh();
-
+		Debug.Log("SAVE DATA on restore");
+		SaveData();
+		
 		cleared = false;
+
+//		AssetItem[] allAssets = GetAllItems(assets);
+//		List<AssetItem> unusedAssets = new List<AssetItem>();
+//		
+//		foreach (AssetItem item in allAssets)
+//		{
+//			if (!item.enabled)
+//			{
+//				unusedAssets.Add(item);
+////				Debug.Log(item.ToString());
+//
+//				AssetDatabase.MoveAsset(item.tempPath, item.path);
+//				item.tempPath = "";
+//			}
+//		}
+//
+//		AssetDatabase.DeleteAsset(tempFolderPath.Remove(tempFolderPath.Length - 1));
+//		AssetDatabase.Refresh();
+//
+//		cleared = false;
 	}
 
 	AssetItem[] GetAllItems(List<AssetItem> baseAssets, bool includeFolder = false)
@@ -372,10 +409,18 @@ public class ResourceManager : EditorWindow
 			}
 			else
 			{
-				//Item deleted
+				//Item not exist
+
+
+//				AssetItem savedItem = GetItemWithTheSamePath(item.path, allSavedItems);
+//				if (savedItem.tempPath != "")
+//				{
+//					assets.Add(savedItem);
+//				}
 			}
 		}
 
+//		Debug.Log("SAVE DATA on load data");
 		SaveData();
 		
 //		for(int i = 0; i < jsonObject.list.Count; i++)
@@ -457,6 +502,15 @@ public class ResourceManager : EditorWindow
 //		// Build player.
 //		BuildPipeline.BuildPlayer(scenesPath.ToArray(), path, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
 //	}
+
+
+	void OnDestroy()
+	{
+		if (cleared)
+		{
+			RestoreUnusedAssets();
+		}
+	}
 
 	void Update()
 	{
