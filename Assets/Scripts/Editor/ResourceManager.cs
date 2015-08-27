@@ -9,30 +9,45 @@ using System.IO;
 public class ResourceManager : EditorWindow
 {
 	//Modify these parameters as you want
-	string saveDataPath = "/SaveData.txt";
+	static string saveDataPath = "/SaveData.txt";
 //	string saveDataName = "SaveData";
-	string tempFolderPath = "Assets/_Resources/";
+	static string tempFolderPath = "Assets/_Resources/";
 
-	List<AssetItem> assets;
-	List<AssetItem> savedAssets;
+	static List<AssetItem> assets;
+	static List<AssetItem> savedAssets;
 
-	Rect toggleRect;
-	bool cleared = false;
-	bool changed = false;
+	static Rect toggleRect;
+	static bool cleared = false;
+	static bool changed = false;
 
-	bool init = false;
+	static bool init = false;
 
-	Vector2 scrollPosition = Vector2.zero;
+	static Vector2 scrollPosition = Vector2.zero;
 
-	[MenuItem("Window/Resource Manager")]
+
+	[MenuItem("Window/Resource Manager/Edit...")]
 	static void Init() 
 	{
-
+		
 		ResourceManager window = (ResourceManager)EditorWindow.GetWindow (typeof (ResourceManager));
 		window.Show();
 	}
 
-	void LoadAssets()
+	[MenuItem("Window/Resource Manager/Hide Unused Assets")]
+	static void Hide()
+	{
+		LoadAssets();
+		HideUnusedAssets();
+	}
+
+	[MenuItem("Window/Resource Manager/Restore Unused Assets")]
+	static void Restore()
+	{
+		LoadAssets();
+		RestoreUnusedAssets();
+	}
+
+	static void LoadAssets()
 	{
 		string[] rootPaths = AssetDatabase.FindAssets("Resources");
 		assets = new List<AssetItem>();
@@ -56,7 +71,7 @@ public class ResourceManager : EditorWindow
 		init = true;
 	}
 
-	AssetItem[] GetSubAssets(string path)
+	static AssetItem[] GetSubAssets(string path)
 	{
 		string[] allSubAssets = AssetDatabase.FindAssets("", new string[] { path } );
 		for (int i = 0; i < allSubAssets.Length; i++)
@@ -122,7 +137,7 @@ public class ResourceManager : EditorWindow
 		return subAssets.ToArray();
 	}
 
-	bool ContainsAssetWithTheSamePath(string path, AssetItem[] items)
+	static bool ContainsAssetWithTheSamePath(string path, AssetItem[] items)
 	{
 		foreach (AssetItem item in items)
 		{
@@ -134,7 +149,7 @@ public class ResourceManager : EditorWindow
 		return false;
 	}
 
-	AssetItem GetItemWithTheSamePath(string path, AssetItem[] items)
+	static AssetItem GetItemWithTheSamePath(string path, AssetItem[] items)
 	{
 		foreach (AssetItem item in items)
 		{
@@ -173,7 +188,7 @@ public class ResourceManager : EditorWindow
 
 			if (changed)
 			{
-				Debug.Log("SAVE DATA on change");
+//				Debug.Log("SAVE DATA on change");
 				SaveData();
 			}
 		}
@@ -192,20 +207,20 @@ public class ResourceManager : EditorWindow
 			}
 		}
 
-		if (!cleared)
-		{
-			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Clear"))
-			{
-				HideUnusedAssets();
-			}
-		}
-		else
-		{
-			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Restore"))
-			{
-				RestoreUnusedAssets();
-			}
-		}
+//		if (!cleared)
+//		{
+//			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Clear"))
+//			{
+//				HideUnusedAssets();
+//			}
+//		}
+//		else
+//		{
+//			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Restore"))
+//			{
+//				RestoreUnusedAssets();
+//			}
+//		}
 
 	}
 
@@ -270,7 +285,7 @@ public class ResourceManager : EditorWindow
 		}
 	}
 
-	void HideUnusedAssets()
+	static void HideUnusedAssets()
 	{
 		AssetItem[] allAssets = GetAllItems(assets);
 		List<AssetItem> unusedAssets = new List<AssetItem>();
@@ -294,13 +309,13 @@ public class ResourceManager : EditorWindow
 		}
 
 		AssetDatabase.Refresh();
-		Debug.Log("SAVE DATA on hide assets");
+//		Debug.Log("SAVE DATA on hide assets");
 		SaveData();
 
 		cleared = true;
 	}
 	
-	void RestoreUnusedAssets()
+	static void RestoreUnusedAssets()
 	{
 		LoadData();
 		AssetItem[] allAssets = GetAllItems(assets);
@@ -320,7 +335,7 @@ public class ResourceManager : EditorWindow
 		
 		AssetDatabase.DeleteAsset(tempFolderPath.Remove(tempFolderPath.Length - 1));
 		AssetDatabase.Refresh();
-		Debug.Log("SAVE DATA on restore");
+//		Debug.Log("SAVE DATA on restore");
 		SaveData();
 		
 		cleared = false;
@@ -346,7 +361,7 @@ public class ResourceManager : EditorWindow
 //		cleared = false;
 	}
 
-	AssetItem[] GetAllItems(List<AssetItem> baseAssets, bool includeFolder = false)
+	static AssetItem[] GetAllItems(List<AssetItem> baseAssets, bool includeFolder = false)
 	{
 		List<AssetItem> childItems = new List<AssetItem>();
 		foreach (AssetItem item in baseAssets)
@@ -368,7 +383,7 @@ public class ResourceManager : EditorWindow
 		Repaint();
 	}
 
-	void SaveData()
+	static void SaveData()
 	{
 		StringBuilder outputString = new StringBuilder();
 		for (int i = 0; i < assets.Count; i++)
@@ -386,7 +401,7 @@ public class ResourceManager : EditorWindow
 		File.WriteAllText(Application.dataPath + saveDataPath, outputString.ToString());
 	}
 
-	void LoadData()
+	static void LoadData()
 	{
 		savedAssets = new List<AssetItem>();
 		string jsonText = File.ReadAllText(Application.dataPath + saveDataPath);
@@ -432,7 +447,7 @@ public class ResourceManager : EditorWindow
 //		}
 	}
 
-	void AccessData(JSONObject obj)
+	static void AccessData(JSONObject obj)
 	{
 		switch(obj.type)
 		{
