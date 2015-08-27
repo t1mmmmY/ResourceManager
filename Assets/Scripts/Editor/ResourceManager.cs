@@ -14,6 +14,7 @@ public class ResourceManager : EditorWindow
 	string tempFolderPath = "Assets/_Resources/";
 
 	List<AssetItem> assets;
+	List<AssetItem> savedAssets;
 
 	Rect toggleRect;
 	bool cleared = false;
@@ -31,14 +32,6 @@ public class ResourceManager : EditorWindow
 
 	void LoadAssets()
 	{
-		init = true;
-
-		if (File.Exists(Application.dataPath + saveDataPath))
-		{
-			LoadData();
-			return;
-		}
-
 		string[] rootPaths = AssetDatabase.FindAssets("Resources");
 		assets = new List<AssetItem>();
 
@@ -53,9 +46,15 @@ public class ResourceManager : EditorWindow
 			assets.Add(rootItem);
 		}
 
+		if (File.Exists(Application.dataPath + saveDataPath))
+		{
+			LoadData();
+		}
+
+		init = true;
 	}
 
-	static AssetItem[] GetSubAssets(string path)
+	AssetItem[] GetSubAssets(string path)
 	{
 		string[] allSubAssets = AssetDatabase.FindAssets("", new string[] { path } );
 		for (int i = 0; i < allSubAssets.Length; i++)
@@ -121,7 +120,7 @@ public class ResourceManager : EditorWindow
 		return subAssets.ToArray();
 	}
 
-	static bool ContainsAssetWithTheSamePath(string path, AssetItem[] items)
+	bool ContainsAssetWithTheSamePath(string path, AssetItem[] items)
 	{
 		foreach (AssetItem item in items)
 		{
@@ -133,6 +132,17 @@ public class ResourceManager : EditorWindow
 		return false;
 	}
 
+	AssetItem GetItemWithTheSamePath(string path, AssetItem[] items)
+	{
+		foreach (AssetItem item in items)
+		{
+			if (item.path == path)
+			{
+				return item;
+			}
+		}
+		return null;
+	}
 
 	void OnGUI() 
 	{
@@ -250,7 +260,7 @@ public class ResourceManager : EditorWindow
 
 	void HideUnusedAssets()
 	{
-		AssetItem[] allAssets = GetAllItems();
+		AssetItem[] allAssets = GetAllItems(assets);
 		List<AssetItem> unusedAssets = new List<AssetItem>();
 		AssetDatabase.CreateFolder("Assets", "_Resources");
 		
@@ -278,7 +288,7 @@ public class ResourceManager : EditorWindow
 	
 	void RestoreUnusedAssets()
 	{
-		AssetItem[] allAssets = GetAllItems();
+		AssetItem[] allAssets = GetAllItems(assets);
 		List<AssetItem> unusedAssets = new List<AssetItem>();
 		
 		foreach (AssetItem item in allAssets)
@@ -299,12 +309,12 @@ public class ResourceManager : EditorWindow
 		cleared = false;
 	}
 
-	AssetItem[] GetAllItems()
+	AssetItem[] GetAllItems(List<AssetItem> baseAssets, bool includeFolder = false)
 	{
 		List<AssetItem> childItems = new List<AssetItem>();
-		foreach (AssetItem item in assets)
+		foreach (AssetItem item in baseAssets)
 		{
-			childItems.AddRange(item.GetChildItems());
+			childItems.AddRange(item.GetChildItems(includeFolder));
 		}
 
 		return childItems.ToArray();
@@ -341,11 +351,33 @@ public class ResourceManager : EditorWindow
 
 	void LoadData()
 	{
-		assets = new List<AssetItem>();
+		savedAssets = new List<AssetItem>();
 		string jsonText = File.ReadAllText(Application.dataPath + saveDataPath);
 		JSONObject jsonObject = new JSONObject(jsonText);
 		AccessData(jsonObject);
 
+		AssetItem[] allSavedItems;
+		AssetItem[] allItems;
+		allSavedItems = GetAllItems(savedAssets, true);
+		allItems = GetAllItems(assets, true);
+		//Get all saved items
+
+		foreach (AssetItem item in allSavedItems)
+		{
+			if (ContainsAssetWithTheSamePath(item.path, allItems))
+			{
+				//Item exist
+//				Debug.Log("Item exist " + item.path);
+				GetItemWithTheSamePath(item.path, allItems).enabled = GetItemWithTheSamePath(item.path, allSavedItems).enabled;
+			}
+			else
+			{
+				//Item deleted
+			}
+		}
+
+		SaveData();
+		
 //		for(int i = 0; i < jsonObject.list.Count; i++)
 //		{
 //			string key = (string)jsonObject.keys[i];
@@ -365,7 +397,7 @@ public class ResourceManager : EditorWindow
 				JSONObject j = (JSONObject)obj.list[i];
 				AssetItem item = new AssetItem();
 				item.Deserialize(j);
-				assets.Add(item);
+				savedAssets.Add(item);
 //				string key = (string)obj.keys[i];
 //				JSONObject j = (JSONObject)obj.list[i];
 //				Debug.Log(obj.list[i].Print(true));

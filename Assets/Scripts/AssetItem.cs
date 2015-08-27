@@ -75,10 +75,10 @@ public class AssetItem
 	/// Get all child items without folders
 	/// </summary>
 	/// <returns>The child items.</returns>
-	public List<AssetItem> GetChildItems()
+	public List<AssetItem> GetChildItems(bool includeFolder = false)
 	{
 		List<AssetItem> items = new List<AssetItem>();
-		FillChild(ref items);
+		FillChild(ref items, includeFolder);
 		return items;
 	}
 	
@@ -215,7 +215,7 @@ public class AssetItem
 	/// Fill ref array with childs
 	/// </summary>
 	/// <param name="items">Items.</param>
-	private void FillChild(ref List<AssetItem> items)
+	private void FillChild(ref List<AssetItem> items, bool includeFolder = false)
 	{
 		if (childAssetItems != null)
 		{
@@ -224,6 +224,10 @@ public class AssetItem
 				if (item.isFolder)
 				{
 					item.FillChild(ref items);
+					if (includeFolder)
+					{
+						items.Add(item);
+					}
 				}
 				else
 				{

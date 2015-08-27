@@ -53,6 +53,16 @@
 						"opened":true,
 						"isFolder":false
 					}
+				},
+				"childAssetItems_2":{
+					"AssetItem":{
+						"name":"NeedThisPrefab.prefab",
+						"path":"Assets/Resources/NeedThis/NeedThisPrefab.prefab",
+						"tempPath":"",
+						"enabled":true,
+						"opened":true,
+						"isFolder":false
+					}
 				}
 			}
 		},
@@ -191,7 +201,7 @@
 				"name":"New Animation.anim",
 				"path":"Assets/Standart/Resources/New Animation.anim",
 				"tempPath":"",
-				"enabled":true,
+				"enabled":false,
 				"opened":true,
 				"isFolder":false
 			}
