@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-[System.Serializable]
+//[System.Serializable]
 public class AssetItem
 {
 	public string path = "";
@@ -94,6 +94,7 @@ public class AssetItem
 	public JSONObject Serialize()
 	{
 //		JSONObject jsonObject = JSONTemplates.TOJSON(this);
+		JSONObject parentObject = new JSONObject(JSONObject.Type.OBJECT);
 
 		JSONObject jsonObject = new JSONObject(JSONObject.Type.OBJECT);
 		jsonObject.AddField("name", name);
@@ -111,7 +112,9 @@ public class AssetItem
 			}
 		}
 
-		return jsonObject;
+		parentObject.AddField("AssetItem", jsonObject);
+
+		return parentObject;
 //		Debug.Log(jsonObject.Print(true));
 	}
 
@@ -128,19 +131,25 @@ public class AssetItem
 		case JSONObject.Type.OBJECT:
 			for(int i = 0; i < obj.list.Count; i++)
 			{
-//				JSONObject j = (JSONObject)obj.list[i];
-//				AssetItem item = new AssetItem();
-//				item.Deserialize(j);
-//				assets.Add(item);
 				string currentKey = (string)obj.keys[i];
 				JSONObject j = (JSONObject)obj.list[i];
 //				Debug.Log(currentKey);
-				AccessData(j, currentKey);
+				if (currentKey.Contains("childAssetItems"))
+				{
+					if (childAssetItems == null)
+					{
+						childAssetItems = new List<AssetItem>();
+					}
+					AssetItem childItem = new AssetItem();
+					childItem.Deserialize(j);
+					childAssetItems.Add(childItem);
+				}
+				else
+				{
+					AccessData(j, currentKey);
+				}
 			}
 			break;
-//		default: 
-//			Debug.LogWarning("It is not an object!");
-//			break;
 		case JSONObject.Type.ARRAY:
 //			Debug.Log("ARRAY");
 			foreach(JSONObject j in obj.list)

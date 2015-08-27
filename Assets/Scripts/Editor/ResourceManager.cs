@@ -13,23 +13,32 @@ public class ResourceManager : EditorWindow
 //	string saveDataName = "SaveData";
 	string tempFolderPath = "Assets/_Resources/";
 
-	static List<AssetItem> assets;
+	List<AssetItem> assets;
 
 	Rect toggleRect;
 	bool cleared = false;
 	bool changed = false;
 
+	bool init = false;
+
 	[MenuItem("Window/Resource Manager")]
 	static void Init() 
 	{
-		LoadAssets();
 
 		ResourceManager window = (ResourceManager)EditorWindow.GetWindow (typeof (ResourceManager));
 		window.Show();
 	}
 
-	static void LoadAssets()
+	void LoadAssets()
 	{
+		init = true;
+
+		if (File.Exists(Application.dataPath + saveDataPath))
+		{
+			LoadData();
+			return;
+		}
+
 		string[] rootPaths = AssetDatabase.FindAssets("Resources");
 		assets = new List<AssetItem>();
 
@@ -250,10 +259,14 @@ public class ResourceManager : EditorWindow
 			if (!item.enabled)
 			{
 				unusedAssets.Add(item);
-				Debug.Log(item.ToString());
+//				Debug.Log(item.ToString());
 
 				string newPath = string.Format("{0}{1}", tempFolderPath, item.name);
-				Debug.Log(AssetDatabase.MoveAsset(item.path, newPath));
+				string result = AssetDatabase.MoveAsset(item.path, newPath);
+				if (result != "")
+				{
+					Debug.LogWarning(result);
+				}
 				item.tempPath = newPath;
 			}
 		}
@@ -273,7 +286,7 @@ public class ResourceManager : EditorWindow
 			if (!item.enabled)
 			{
 				unusedAssets.Add(item);
-				Debug.Log(item.ToString());
+//				Debug.Log(item.ToString());
 
 				AssetDatabase.MoveAsset(item.tempPath, item.path);
 				item.tempPath = "";
@@ -300,6 +313,10 @@ public class ResourceManager : EditorWindow
 
 	void OnInspectorUpdate() 
 	{
+		if (!init)
+		{
+			LoadAssets();
+		}
 
 		Repaint();
 	}
@@ -385,6 +402,7 @@ public class ResourceManager : EditorWindow
 	void RestoreAssetsAfterBuild()
 	{
 		//This one will execute after build process
+		init = false;
 	}
 
 
