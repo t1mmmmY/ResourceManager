@@ -23,9 +23,9 @@ public class ResourceManager : EditorWindow
 	static bool init = false;
 
 	static Vector2 scrollPosition = Vector2.zero;
+	static string buildPath;
 
-
-	[MenuItem("Window/Resource Manager/Edit...")]
+	[MenuItem("Resource Manager/Edit...")]
 	static void Init() 
 	{
 		
@@ -33,17 +33,17 @@ public class ResourceManager : EditorWindow
 		window.Show();
 	}
 
-	[MenuItem("Window/Resource Manager/Hide Unused Assets")]
+//	[MenuItem("Window/Resource Manager/Hide Unused Assets")]
 	static void Hide()
 	{
 		LoadAssets();
 		HideUnusedAssets();
 	}
 
-	[MenuItem("Window/Resource Manager/Restore Unused Assets")]
+//	[MenuItem("Window/Resource Manager/Restore Unused Assets")]
 	static void Restore()
 	{
-		LoadAssets();
+//		LoadAssets();
 		RestoreUnusedAssets();
 	}
 
@@ -490,33 +490,45 @@ public class ResourceManager : EditorWindow
 		}
 	}
 
-	[PostProcessBuildAttribute()]
-	void RestoreAssetsAfterBuild()
-	{
-		//This one will execute after build process
-		init = false;
-	}
-
-
-//	[MenuItem("MyTools/Windows Build With Postprocess")]
-//	public static void BuildGame ()
+//	[PostProcessBuildAttribute()]
+//	static void RestoreAssetsAfterBuild()
 //	{
-//		EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
-//		List<string> scenesPath = new List<string>();
-//		foreach(EditorBuildSettingsScene scene in scenes)
-//		{
-//			if (scene.enabled)
-//			{
-//				scenesPath.Add(scene.path);
-//			}
-//		}
-//
-//		// Get filename.
-//		string path = EditorUtility.SaveFilePanel("Choose Location of Built Game", "", "", "");
-//
-//		// Build player.
-//		BuildPipeline.BuildPlayer(scenesPath.ToArray(), path, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
+//		//This one will execute after build process
+//		init = false;
 //	}
+
+
+	[MenuItem("Resource Manager/Build")]
+	public static void BuildGame ()
+	{
+		EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
+		List<string> scenesPath = new List<string>();
+		foreach(EditorBuildSettingsScene scene in scenes)
+		{
+			if (scene.enabled)
+			{
+				scenesPath.Add(scene.path);
+			}
+		}
+
+		if (PlayerPrefs.HasKey("BUILD_PATH"))
+		{
+			buildPath = PlayerPrefs.GetString("BUILD_PATH");
+		}
+		// Get filename.
+		buildPath = EditorUtility.SaveFilePanel("Choose Location of Built Game", buildPath, "", "");
+
+		Hide ();
+
+		if (buildPath != string.Empty)
+		{
+			PlayerPrefs.SetString("BUILD_PATH", buildPath);
+			// Build player.
+			BuildPipeline.BuildPlayer(scenesPath.ToArray(), buildPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
+		}
+
+		Restore();
+	}
 
 
 	void OnDestroy()
