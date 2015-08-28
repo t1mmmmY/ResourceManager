@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-//[System.Serializable]
 public class AssetItem
 {
 	public string path = "";
@@ -133,7 +132,6 @@ public class AssetItem
 			{
 				string currentKey = (string)obj.keys[i];
 				JSONObject j = (JSONObject)obj.list[i];
-//				Debug.Log(currentKey);
 				if (currentKey.Contains("childAssetItems"))
 				{
 					if (childAssetItems == null)
@@ -151,7 +149,6 @@ public class AssetItem
 			}
 			break;
 		case JSONObject.Type.ARRAY:
-//			Debug.Log("ARRAY");
 			foreach(JSONObject j in obj.list)
 			{
 				AccessData(j, "");
@@ -159,15 +156,12 @@ public class AssetItem
 			break;
 		case JSONObject.Type.STRING:
 			AssignParameter(key, obj);
-//			Debug.Log(obj.str);
 			break;
 		case JSONObject.Type.NUMBER:
 			AssignParameter(key, obj);
-//			Debug.Log(obj.n);
 			break;
 		case JSONObject.Type.BOOL:
 			AssignParameter(key, obj);
-//			Debug.Log(obj.b);
 			break;
 		case JSONObject.Type.NULL:
 			Debug.Log("NULL");
@@ -183,30 +177,23 @@ public class AssetItem
 		case "path":
 			path = value.str;
 			return true;
-//			break;
 		case "tempPath":
 			tempPath = value.str;
 			return true;
-//			break;
 		case "name":
 			name = value.str;
 			return true;
-//			break;
 		case "enabled":
 			enabled = value.b;
 			return true;
-//			break;
 		case "opened":
 			opened = value.b;
 			return true;
-//			break;
 		case "isFolder":
 			isFolder = value.b;
 			return true;
-//			break;
 		default:
 			return false;
-//			break;
 		}
 	}
 	
