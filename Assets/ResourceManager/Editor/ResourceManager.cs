@@ -9,8 +9,12 @@ using System.IO;
 public class ResourceManager : EditorWindow
 {
 	//Modify these parameters as you want
-	static string saveDataPath = "/SaveData.txt";
-	static string tempFolderPath = "Assets/_Resources/";
+	static string saveDataPath = "SaveData.txt";
+//	static string tempFolderPath = "Assets/_Resources/";
+//	static string tempFolderAssetDatabese = "_Resources";
+	
+	static string tempFolderPath = "../_Resources/";
+//	static string tempFolderAssetDatabese = "_Resources";
 
 	static List<AssetItem> assets;
 	static List<AssetItem> savedAssets;
@@ -27,7 +31,6 @@ public class ResourceManager : EditorWindow
 	[MenuItem("Resource Manager/Edit...")]
 	static void Init() 
 	{
-		
 		ResourceManager window = (ResourceManager)EditorWindow.GetWindow (typeof (ResourceManager));
 		window.Show();
 	}
@@ -41,7 +44,7 @@ public class ResourceManager : EditorWindow
 
 		for (int i = 0; i < rootPaths.Length; i++)
 		{
-			rootPaths[i] = AssetDatabase.GUIDToAssetPath(rootPaths[i]);
+			rootPaths[i] = AssetDatabase.GUIDToAssetPath(rootPaths[i]);//.Replace("Assets/", "");
 			AssetItem rootItem = new AssetItem();
 			rootItem.path = rootPaths[i];
 			rootItem.name = rootItem.path.Substring(rootItem.path.LastIndexOf('/') + 1);
@@ -50,7 +53,7 @@ public class ResourceManager : EditorWindow
 			assets.Add(rootItem);
 		}
 
-		if (File.Exists(Application.dataPath + saveDataPath))
+		if (File.Exists(GetAbsolutePath(saveDataPath)))
 		{
 			LoadData();
 		}
@@ -71,8 +74,19 @@ public class ResourceManager : EditorWindow
 		//Find folders
 		foreach (string asset in allSubAssets)
 		{
-			int nextSlashIndex = asset.IndexOf('/', path.Length + 1);
-			
+			int nextSlashIndex = -1;
+			if (asset.Length > path.Length + 1)
+			{
+				nextSlashIndex = asset.IndexOf('/', path.Length + 1);
+			}
+//			try
+//			{
+//				nextSlashIndex = asset.IndexOf('/', path.Length + 1);
+//			}
+//			catch (System.Exception ex)
+//			{
+//				int k = 0;
+//			}
 			AssetItem item = new AssetItem();
 
 			if (nextSlashIndex != -1)
@@ -93,7 +107,11 @@ public class ResourceManager : EditorWindow
 		//Find items
 		foreach (string asset in allSubAssets)
 		{
-			int nextSlashIndex = asset.IndexOf('/', path.Length + 1);
+			int nextSlashIndex = -1;
+			if (asset.Length > path.Length + 1)
+			{
+				nextSlashIndex = asset.IndexOf('/', path.Length + 1);
+			}
 			
 			AssetItem item = new AssetItem();
 
@@ -181,14 +199,14 @@ public class ResourceManager : EditorWindow
 
 
 		//FOR TESTING
-		if (!cleared)
+//		if (!cleared)
 		{
-			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Clear"))
+			if (GUI.Button(new Rect(position.width - 90, position.height - 120, 80, 30), "Clear"))
 			{
 				HideUnusedAssets();
 			}
 		}
-		else
+//		else
 		{
 			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Restore"))
 			{
@@ -268,24 +286,35 @@ public class ResourceManager : EditorWindow
 		}
 	}
 
+	static string GetAbsolutePath(string localPath)
+	{
+		string absolutePath = Application.dataPath + "/" + localPath;
+		Debug.Log(absolutePath);
+		return absolutePath;
+	}
+
 	static void HideUnusedAssets()
 	{
 		AssetItem[] allAssets = GetAllItems(assets);
 		List<AssetItem> unusedAssets = new List<AssetItem>();
-		AssetDatabase.CreateFolder("Assets", "_Resources");
-		
+//		AssetDatabase.CreateFolder("Assets", tempFolderPath);
+
+		Directory.CreateDirectory(GetAbsolutePath(tempFolderPath));
+//		AssetDatabase.CreateFolder("Assets", tempFolderAssetDatabese);
+		//tempFolderPath
 		foreach (AssetItem item in allAssets)
 		{
 			if (!item.enabled)
 			{
 				unusedAssets.Add(item);
 
-				string newPath = string.Format("{0}{1}", tempFolderPath, item.name);
-				string result = AssetDatabase.MoveAsset(item.path, newPath);
-				if (result != "")
-				{
-					Debug.LogWarning(result);
-				}
+				string newPath = string.Format("{0}{1}", GetAbsolutePath(tempFolderPath), item.name);
+				File.Move(item.path, newPath);
+//				string result = AssetDatabase.MoveAsset(item.path, newPath);
+//				if (result != "")
+//				{
+//					Debug.LogWarning(result);
+//				}
 				item.tempPath = newPath;
 			}
 		}
@@ -305,13 +334,14 @@ public class ResourceManager : EditorWindow
 		{
 			if (!item.enabled)
 			{
-				
-				AssetDatabase.MoveAsset(item.tempPath, item.path);
+				File.Move(item.tempPath, GetAbsolutePath(item.path.Replace("Assets/", "")));
+//				AssetDatabase.MoveAsset(item.tempPath, item.path);
 				item.tempPath = "";
 			}
 		}
-		
-		AssetDatabase.DeleteAsset(tempFolderPath.Remove(tempFolderPath.Length - 1));
+
+//		File.Delete(Application.dataPath + tempFolderPath);
+//		AssetDatabase.DeleteAsset(tempFolderPath.Remove(tempFolderPath.Length - 1));
 		AssetDatabase.Refresh();
 		SaveData();
 		
@@ -355,13 +385,13 @@ public class ResourceManager : EditorWindow
 			}
 		}
 
-		File.WriteAllText(Application.dataPath + saveDataPath, outputString.ToString());
+		File.WriteAllText(GetAbsolutePath(saveDataPath), outputString.ToString());
 	}
 
 	static void LoadData()
 	{
 		savedAssets = new List<AssetItem>();
-		string jsonText = File.ReadAllText(Application.dataPath + saveDataPath);
+		string jsonText = File.ReadAllText(GetAbsolutePath(saveDataPath));
 		JSONObject jsonObject = new JSONObject(jsonText);
 		AccessData(jsonObject);
 
@@ -431,16 +461,16 @@ public class ResourceManager : EditorWindow
 		// Get filename.
 		buildPath = EditorUtility.SaveFilePanel("Choose Location of Built Game", buildPath, "", "");
 
-		Hide ();
-
 		if (buildPath != string.Empty)
 		{
+			Hide();
+
 			PlayerPrefs.SetString("BUILD_PATH", buildPath);
 			// Build player.
 			BuildPipeline.BuildPlayer(scenesPath.ToArray(), buildPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
-		}
 
-		Restore();
+			Restore();
+		}
 	}
 
 	static void Hide()
