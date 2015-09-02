@@ -180,6 +180,23 @@ public class ResourceManager : EditorWindow
 		}
 
 
+		//FOR TESTING
+		if (!cleared)
+		{
+			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Clear"))
+			{
+				HideUnusedAssets();
+			}
+		}
+		else
+		{
+			if (GUI.Button(new Rect(position.width - 90, position.height - 80, 80, 30), "Restore"))
+			{
+				RestoreUnusedAssets();
+			}
+		}
+
+
 		if (!cleared)
 		{
 			if (GUI.Button(new Rect(position.width - 90, position.height - 40, 80, 30), "Refresh"))
