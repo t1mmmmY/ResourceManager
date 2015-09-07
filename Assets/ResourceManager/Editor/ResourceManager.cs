@@ -320,15 +320,17 @@ public class ResourceManager : EditorWindow
 
 				string newPath = Path.Combine(GetRelativePath(_tempFolderName), item.name);
 				//We can't use File class because we will lose all the resource import settings
-				string result = AssetDatabase.MoveAsset(item.path, newPath);
+//				string result = AssetDatabase.MoveAsset(item.path, newPath);
+				File.Move(item.path, newPath);
+				File.Move(item.path + ".meta", newPath + ".meta");
 
 				//If operation was completed successfully
-				if (string.IsNullOrEmpty(result))
+//				if (string.IsNullOrEmpty(result))
 				{
 					//Store new file path as temporary
 					item.tempPath = newPath;
 				}
-				else
+//				else
 				{
 					//Print error message instead
 //					Debug.LogError(result);
@@ -354,7 +356,9 @@ public class ResourceManager : EditorWindow
 		{
 			if (!item.enabled)
 			{
-				AssetDatabase.MoveAsset(item.tempPath, item.path);
+//				AssetDatabase.MoveAsset(item.tempPath, item.path);
+				File.Move(item.tempPath, item.path);
+				File.Move(item.tempPath + ".meta", item.path + ".meta");
 				item.tempPath = "";
 //				item.enabled = false;
 			}

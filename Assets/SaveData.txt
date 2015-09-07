@@ -191,15 +191,15 @@
 				"name":"NotNeed 1",
 				"path":"Assets/Resources/NotNeed 1",
 				"tempPath":"",
-				"enabled":true,
+				"enabled":false,
 				"opened":true,
 				"isFolder":true,
 				"childAssetItems_0":{
 					"AssetItem":{
 						"name":"1D4_2575 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/1D4_2575 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/1D4_2575 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -208,8 +208,8 @@
 					"AssetItem":{
 						"name":"5dr1LI4ebUE 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/5dr1LI4ebUE 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/5dr1LI4ebUE 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -218,8 +218,8 @@
 					"AssetItem":{
 						"name":"5hfBPeSwFoM 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/5hfBPeSwFoM 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/5hfBPeSwFoM 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -228,8 +228,8 @@
 					"AssetItem":{
 						"name":"11737975_890695427668489_1019718546073512846_n 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/11737975_890695427668489_1019718546073512846_n 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/11737975_890695427668489_1019718546073512846_n 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -238,8 +238,8 @@
 					"AssetItem":{
 						"name":"gBS5de2qVxo 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/gBS5de2qVxo 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/gBS5de2qVxo 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -248,8 +248,8 @@
 					"AssetItem":{
 						"name":"ILdnXiW2Zps 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/ILdnXiW2Zps 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/ILdnXiW2Zps 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -258,8 +258,8 @@
 					"AssetItem":{
 						"name":"IMG_20140517_130421 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/IMG_20140517_130421 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/IMG_20140517_130421 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -268,8 +268,8 @@
 					"AssetItem":{
 						"name":"IMG_20140517_130448 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/IMG_20140517_130448 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/IMG_20140517_130448 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -278,8 +278,8 @@
 					"AssetItem":{
 						"name":"pBPZIE0vmlo 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/pBPZIE0vmlo 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/pBPZIE0vmlo 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -288,8 +288,8 @@
 					"AssetItem":{
 						"name":"u6zfNpC24Ug 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/u6zfNpC24Ug 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/u6zfNpC24Ug 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
@@ -298,8 +298,8 @@
 					"AssetItem":{
 						"name":"z1yWDtvkZ_0 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/z1yWDtvkZ_0 1.jpg",
-						"tempPath":"",
-						"enabled":true,
+						"tempPath":"Assets/TempResources/z1yWDtvkZ_0 1.jpg",
+						"enabled":false,
 						"opened":true,
 						"isFolder":false
 					}
