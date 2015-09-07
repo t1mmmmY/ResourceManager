@@ -16,6 +16,26 @@
 				"isFolder":true,
 				"childAssetItems_0":{
 					"AssetItem":{
+						"name":"dBweQ7uDyz0.jpg",
+						"path":"Assets/Resources/NeedThis/dBweQ7uDyz0.jpg",
+						"tempPath":"",
+						"enabled":true,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_1":{
+					"AssetItem":{
+						"name":"NeedThisPrefab.prefab",
+						"path":"Assets/Resources/NeedThis/NeedThisPrefab.prefab",
+						"tempPath":"",
+						"enabled":true,
+						"opened":true,
+						"isFolder":false
+					}
+				},
+				"childAssetItems_2":{
+					"AssetItem":{
 						"name":"OtherStuff",
 						"path":"Assets/Resources/NeedThis/OtherStuff",
 						"tempPath":"",
@@ -43,26 +63,6 @@
 							}
 						}
 					}
-				},
-				"childAssetItems_1":{
-					"AssetItem":{
-						"name":"dBweQ7uDyz0.jpg",
-						"path":"Assets/Resources/NeedThis/dBweQ7uDyz0.jpg",
-						"tempPath":"",
-						"enabled":true,
-						"opened":true,
-						"isFolder":false
-					}
-				},
-				"childAssetItems_2":{
-					"AssetItem":{
-						"name":"NeedThisPrefab.prefab",
-						"path":"Assets/Resources/NeedThis/NeedThisPrefab.prefab",
-						"tempPath":"",
-						"enabled":true,
-						"opened":true,
-						"isFolder":false
-					}
 				}
 			}
 		},
@@ -71,7 +71,7 @@
 				"name":"NotNeed",
 				"path":"Assets/Resources/NotNeed",
 				"tempPath":"",
-				"enabled":false,
+				"enabled":true,
 				"opened":true,
 				"isFolder":true,
 				"childAssetItems_0":{
@@ -79,7 +79,7 @@
 						"name":"1D4_2575.jpg",
 						"path":"Assets/Resources/NotNeed/1D4_2575.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -89,7 +89,7 @@
 						"name":"5dr1LI4ebUE.jpg",
 						"path":"Assets/Resources/NotNeed/5dr1LI4ebUE.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -99,7 +99,7 @@
 						"name":"5hfBPeSwFoM.jpg",
 						"path":"Assets/Resources/NotNeed/5hfBPeSwFoM.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -109,7 +109,7 @@
 						"name":"11737975_890695427668489_1019718546073512846_n.jpg",
 						"path":"Assets/Resources/NotNeed/11737975_890695427668489_1019718546073512846_n.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -119,7 +119,7 @@
 						"name":"gBS5de2qVxo.jpg",
 						"path":"Assets/Resources/NotNeed/gBS5de2qVxo.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -129,7 +129,7 @@
 						"name":"ILdnXiW2Zps.jpg",
 						"path":"Assets/Resources/NotNeed/ILdnXiW2Zps.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -139,7 +139,7 @@
 						"name":"IMG_20140517_130421.jpg",
 						"path":"Assets/Resources/NotNeed/IMG_20140517_130421.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -149,7 +149,7 @@
 						"name":"IMG_20140517_130448.jpg",
 						"path":"Assets/Resources/NotNeed/IMG_20140517_130448.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -159,7 +159,7 @@
 						"name":"pBPZIE0vmlo.jpg",
 						"path":"Assets/Resources/NotNeed/pBPZIE0vmlo.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -169,7 +169,7 @@
 						"name":"u6zfNpC24Ug.jpg",
 						"path":"Assets/Resources/NotNeed/u6zfNpC24Ug.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -179,7 +179,7 @@
 						"name":"z1yWDtvkZ_0.jpg",
 						"path":"Assets/Resources/NotNeed/z1yWDtvkZ_0.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -191,7 +191,7 @@
 				"name":"NotNeed 1",
 				"path":"Assets/Resources/NotNeed 1",
 				"tempPath":"",
-				"enabled":false,
+				"enabled":true,
 				"opened":true,
 				"isFolder":true,
 				"childAssetItems_0":{
@@ -199,7 +199,7 @@
 						"name":"1D4_2575 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/1D4_2575 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -209,7 +209,7 @@
 						"name":"5dr1LI4ebUE 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/5dr1LI4ebUE 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -219,7 +219,7 @@
 						"name":"5hfBPeSwFoM 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/5hfBPeSwFoM 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -229,7 +229,7 @@
 						"name":"11737975_890695427668489_1019718546073512846_n 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/11737975_890695427668489_1019718546073512846_n 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -239,7 +239,7 @@
 						"name":"gBS5de2qVxo 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/gBS5de2qVxo 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -249,7 +249,7 @@
 						"name":"ILdnXiW2Zps 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/ILdnXiW2Zps 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -259,7 +259,7 @@
 						"name":"IMG_20140517_130421 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/IMG_20140517_130421 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -269,7 +269,7 @@
 						"name":"IMG_20140517_130448 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/IMG_20140517_130448 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -279,7 +279,7 @@
 						"name":"pBPZIE0vmlo 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/pBPZIE0vmlo 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -289,7 +289,7 @@
 						"name":"u6zfNpC24Ug 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/u6zfNpC24Ug 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -299,7 +299,7 @@
 						"name":"z1yWDtvkZ_0 1.jpg",
 						"path":"Assets/Resources/NotNeed 1/z1yWDtvkZ_0 1.jpg",
 						"tempPath":"",
-						"enabled":false,
+						"enabled":true,
 						"opened":true,
 						"isFolder":false
 					}
@@ -315,16 +315,6 @@
 		"tempPath":"",
 		"enabled":true,
 		"opened":true,
-		"isFolder":true,
-		"childAssetItems_0":{
-			"AssetItem":{
-				"name":"New Prefab.prefab",
-				"path":"Assets/Standart/Resources/New Prefab.prefab",
-				"tempPath":"",
-				"enabled":true,
-				"opened":true,
-				"isFolder":false
-			}
-		}
+		"isFolder":true
 	}
 }
