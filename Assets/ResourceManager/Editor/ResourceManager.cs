@@ -43,32 +43,6 @@ public class ResourceManager : EditorWindow
 		window.Show();
 	}
 
-	static bool CheckDependencies()
-	{
-		bool result = true;
-
-		// Get list of scenes that are going to be built
-		string[] scenes = EditorBuildSettings.scenes.Where(scene => scene.enabled).Select(scene => scene.path).ToArray<string>();
-		
-		foreach(var scene in scenes)
-		{
-			// Get scene dependencies
-			string[] dependencies = AssetDatabase.GetDependencies(new [] {scene});
-
-			//Show all dependencies in console
-			foreach(var dependency in dependencies)
-            {
-				if (dependency.StartsWith(GetRelativePath(_tempFolderName)))
-				{
-					Debug.LogError("Scene '" + Path.GetFileName(scene) + "' contains dependency : '" + dependency + "'");
-					result = false;
-				}
-            }
-		}
-
-		return result;
-	}
-
 	static void Refresh()
 	{
 		LoadAssets();
@@ -218,13 +192,6 @@ public class ResourceManager : EditorWindow
 			{
 				Refresh();
 			}
-		}
-		else
-		{
-			if (GUI.Button(new Rect(position.width - 130, position.height - 80, 120, 30), "Check dependencies"))
-			{
-				CheckDependencies();
-            }
 		}
 	}
 
@@ -535,12 +502,9 @@ public class ResourceManager : EditorWindow
 		{
 			Hide();
 
-			if (CheckDependencies())
-			{
-				PlayerPrefs.SetString("BUILD_PATH", buildPath);
-				// Build player.
-				BuildPipeline.BuildPlayer(scenesPath.ToArray(), buildPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
-			}
+			PlayerPrefs.SetString("BUILD_PATH", buildPath);
+			// Build player.
+			BuildPipeline.BuildPlayer(scenesPath.ToArray(), buildPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
 
 			Restore();
 		}
