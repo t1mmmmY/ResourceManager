@@ -21,20 +21,15 @@ public class ResourceManager : EditorWindow
 	{ 
 		get 
 		{
-			if (!PlayerPrefs.HasKey("IS_CLEARED"))
-			{
-				PlayerPrefs.SetInt("IS_CLEARED", 0);
-			}
-			return (PlayerPrefs.GetInt("IS_CLEARED") == 0) ? false : true;
+			return PlayerPrefs.GetInt("IS_CLEARED", 0) == 1;
 		}
 		set
 		{
-			int state = (value == true) ? 1 : 0;
-			PlayerPrefs.SetInt("IS_CLEARED", state);
+			PlayerPrefs.SetInt("IS_CLEARED", (value == true) ? 1 : 0);
 		}
 	}
-	static bool changed = false;
 
+	static bool changed = false;
 	static bool init = false;
 
 	static Vector2 scrollPosition = Vector2.zero;
@@ -44,7 +39,6 @@ public class ResourceManager : EditorWindow
 	static void Init() 
 	{
 		Refresh();
-//		cleared = false;
 		ResourceManager window = (ResourceManager)EditorWindow.GetWindow (typeof (ResourceManager));
 		window.Show();
 	}
@@ -294,12 +288,16 @@ public class ResourceManager : EditorWindow
 			EditorGUI.LabelField(foldoutRect, item.name);
 		}
 	}
-
-	static string GetAbsolutePath(string localPath, bool parentDirectory = false)
+	
+	static string GetAbsolutePath(string localPath)
 	{
-		if (parentDirectory)
+		//IF localPath relative and starts with "Assets/"
+		if (localPath.StartsWith("Assets" + Path.DirectorySeparatorChar))
 		{
-			return Path.Combine(Directory.GetParent(Application.dataPath).FullName, localPath);
+			// Example /Users/{UserName}/{ProjectName}
+			string assetParentFolder = Directory.GetParent(Application.dataPath).FullName;
+			// Example /Users/{UserName}/{ProjectName}/{localPath}
+			return Path.Combine(assetParentFolder, localPath);
 		}
 		else
 		{
@@ -320,11 +318,6 @@ public class ResourceManager : EditorWindow
 		AssetItem[] allAssets = GetAllItems(_assets);
 		List<AssetItem> unusedAssets = new List<AssetItem>();
 
-//		if (!AssetDatabase.IsValidFolder(GetRelativePath(_tempFolderName)))
-//		{
-//			AssetDatabase.CreateFolder("Assets", _tempFolderName);
-//		}
-
 		//Moving unchecked items to temporary folder
 		foreach (AssetItem item in allAssets)
 		{
@@ -332,32 +325,46 @@ public class ResourceManager : EditorWindow
 			{
 				unusedAssets.Add(item);
 
-				string newPath = Path.Combine(_tempFolderName, item.name);
-//				string newPath = _tempFolderName;
-				//We can't use File class because we will lose all the resource import settings
-//				string result = AssetDatabase.MoveAsset(item.path, newPath);
-//				Debug.Log("item.path = " + GetAbsolutePath(item.path, true) + "\nnewPath = " + GetAbsolutePath(newPath, true));
-				Directory.CreateDirectory(GetAbsolutePath(_tempFolderName, true));
-				File.Move(GetAbsolutePath(item.path, true), GetAbsolutePath(newPath, true));
-				File.Move(GetAbsolutePath(item.path + ".meta", true), GetAbsolutePath(newPath + ".meta", true));
+				// Example /Users/{UserName}/{ProjectName}
+				string assetParentAbsPath = Directory.GetParent(Application.dataPath).FullName;
+				// Put Folder out of Unity's Asset folder
+				// Example /Users/{UserName}/{ProjectName}/{TempFolderName} 
+				string tempFolderAbsPath = Path.Combine(assetParentAbsPath, _tempFolderName);
+				// Example /Users/{UserName}/{ProjectName}/{TempFolderName}/{FileName.xxx}
+				string newAbsPath = Path.Combine(tempFolderAbsPath, item.name);
 
-				//If operation was completed successfully
-//				if (string.IsNullOrEmpty(result))
+				if (!Directory.Exists(tempFolderAbsPath))
 				{
-					//Store new file path as temporary
-					item.tempPath = newPath;
+					Directory.CreateDirectory(tempFolderAbsPath);
 				}
-//				else
+
+				try
 				{
-					//Print error message instead
-//					Debug.LogError(result);
+					string oldItemPath = GetAbsolutePath(item.path);
+
+					// Move file itself
+					if (File.Exists(oldItemPath))
+					{
+						File.Move(oldItemPath, newAbsPath);
+					}
+					// Move its .meta file
+					if (File.Exists(oldItemPath + ".meta"))
+					{
+						File.Move(oldItemPath + ".meta", newAbsPath + ".meta");
+					}
+
+					item.tempPath = newAbsPath;
+				}
+				//TODO Use more accurate exception check
+				catch (System.Exception ex)
+				{
+					Debug.LogError(ex.Message);
+					throw;
 				}
 			}
 		}
 
 		AssetDatabase.Refresh();
-//		Debug.Log("SaveData 330");
-		
 		SaveData();
 
 		cleared = true;
@@ -373,11 +380,19 @@ public class ResourceManager : EditorWindow
 		{
 			if (!item.enabled)
 			{
-//				AssetDatabase.MoveAsset(item.tempPath, item.path);
-				File.Move(item.tempPath, item.path);
-				File.Move(item.tempPath + ".meta", item.path + ".meta");
+				try
+				{
+					File.Move(item.tempPath, item.path);
+					File.Move(item.tempPath + ".meta", item.path + ".meta");
+
+				}
+				//TODO fix that
+				catch (System.Exception ex)
+				{
+					Debug.LogError(ex.Message);
+				//	throw;
+				}
 				item.tempPath = "";
-//				item.enabled = false;
 			}
 		}
 
