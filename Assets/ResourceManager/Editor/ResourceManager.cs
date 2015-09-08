@@ -331,7 +331,8 @@ public class ResourceManager : EditorWindow
 				// Example /Users/{UserName}/{ProjectName}/{TempFolderName} 
 				string tempFolderAbsPath = Path.Combine(assetParentAbsPath, _tempFolderName);
 				// Example /Users/{UserName}/{ProjectName}/{TempFolderName}/{FileName.xxx}
-				string newAbsPath = Path.Combine(tempFolderAbsPath, item.name);
+				string itemRandomName = Path.GetRandomFileName();
+				string newAbsPath = Path.Combine(tempFolderAbsPath, itemRandomName);
 
 				if (!Directory.Exists(tempFolderAbsPath))
 				{

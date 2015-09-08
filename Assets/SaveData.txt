@@ -78,7 +78,7 @@
 					"AssetItem":{
 						"name":"1D4_2575.jpg",
 						"path":"Assets/Resources/NotNeed/1D4_2575.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/5t3h4kep.zb3",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -88,7 +88,7 @@
 					"AssetItem":{
 						"name":"5dr1LI4ebUE.jpg",
 						"path":"Assets/Resources/NotNeed/5dr1LI4ebUE.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/3lzqs6dm.vzx",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -98,7 +98,7 @@
 					"AssetItem":{
 						"name":"5hfBPeSwFoM.jpg",
 						"path":"Assets/Resources/NotNeed/5hfBPeSwFoM.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/pciun8bp.n8f",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -108,7 +108,7 @@
 					"AssetItem":{
 						"name":"11737975_890695427668489_1019718546073512846_n.jpg",
 						"path":"Assets/Resources/NotNeed/11737975_890695427668489_1019718546073512846_n.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/792ud0hn.1a0",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -118,7 +118,7 @@
 					"AssetItem":{
 						"name":"gBS5de2qVxo.jpg",
 						"path":"Assets/Resources/NotNeed/gBS5de2qVxo.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/lbgw8epf.oqi",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -128,7 +128,7 @@
 					"AssetItem":{
 						"name":"ILdnXiW2Zps.jpg",
 						"path":"Assets/Resources/NotNeed/ILdnXiW2Zps.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/47rx3y2g.gem",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -138,7 +138,7 @@
 					"AssetItem":{
 						"name":"IMG_20140517_130421.jpg",
 						"path":"Assets/Resources/NotNeed/IMG_20140517_130421.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/dkqrxole.5va",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -148,7 +148,7 @@
 					"AssetItem":{
 						"name":"IMG_20140517_130448.jpg",
 						"path":"Assets/Resources/NotNeed/IMG_20140517_130448.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/axlvf5in.etc",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -158,7 +158,7 @@
 					"AssetItem":{
 						"name":"pBPZIE0vmlo.jpg",
 						"path":"Assets/Resources/NotNeed/pBPZIE0vmlo.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/y3lszm2u.kvk",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -168,7 +168,7 @@
 					"AssetItem":{
 						"name":"u6zfNpC24Ug.jpg",
 						"path":"Assets/Resources/NotNeed/u6zfNpC24Ug.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/xhmcfqdx.bes",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
@@ -178,7 +178,7 @@
 					"AssetItem":{
 						"name":"z1yWDtvkZ_0.jpg",
 						"path":"Assets/Resources/NotNeed/z1yWDtvkZ_0.jpg",
-						"tempPath":"",
+						"tempPath":"/Users/t1mmmmY/Documents/Unity/Projects/ResourceManager/TempResources/ze85pxb6.i4j",
 						"enabled":false,
 						"opened":true,
 						"isFolder":false
