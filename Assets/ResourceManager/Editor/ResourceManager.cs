@@ -358,8 +358,18 @@ public class ResourceManager : EditorWindow
 				//TODO Use more accurate exception check
 				catch (System.Exception ex)
 				{
-					Debug.LogError(ex.Message);
-					throw;
+					bool needBreak = ParseException(ex);
+					if (needBreak)
+					{
+						throw;
+					}
+
+//					if (ex.Message.Contains("ERROR_ALREADY_EXISTS"))
+//					{
+//						Debug.LogWarning("Item already exist in target folder");
+//					}
+					//					Debug.LogError(ex.Message);
+//					throw;
 				}
 			}
 		}
@@ -369,7 +379,8 @@ public class ResourceManager : EditorWindow
 
 		cleared = true;
 	}
-	
+
+
 	static void RestoreUnusedAssets()
 	{
 //		Debug.Log("LoadData 347");
@@ -382,14 +393,28 @@ public class ResourceManager : EditorWindow
 			{
 				try
 				{
-					File.Move(item.tempPath, item.path);
-					File.Move(item.tempPath + ".meta", item.path + ".meta");
+					// Move file itself
+					if (File.Exists(item.tempPath))
+					{
+						File.Move(item.tempPath, item.path);
+					}
+					// Move its .meta file
+					if (File.Exists(item.tempPath + ".meta"))
+					{
+						File.Move(item.tempPath + ".meta", item.path + ".meta");
+					}
+
 
 				}
 				//TODO fix that
 				catch (System.Exception ex)
 				{
-					Debug.LogError(ex.Message);
+					bool needBreak = ParseException(ex);
+					if (needBreak)
+					{
+						throw;
+					}
+//					Debug.LogError(ex.Message);
 				//	throw;
 				}
 				item.tempPath = "";
@@ -405,6 +430,38 @@ public class ResourceManager : EditorWindow
 		cleared = false;
 		LoadAssets();
 	}
+
+
+	static bool ParseException(System.Exception ex)
+	{
+		System.Type exType = ex.GetType();
+		if (exType == typeof(IOException))
+		{
+			Debug.LogWarning("The destination file already exists.");
+			return false;
+		}
+		else if (exType == typeof(System.UnauthorizedAccessException))
+		{
+			Debug.LogWarning("The caller does not have the required permission.");
+			return false;
+		}
+		else if (exType == typeof(PathTooLongException))
+		{
+			Debug.LogWarning("The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.");
+			return false;
+		}
+		else if (exType == typeof(DirectoryNotFoundException))
+		{
+			Debug.LogWarning("The path specified in sourceFileName or destFileName is invalid, (for example, it is on an unmapped drive).");
+			return false;
+		}
+		else
+		{
+			Debug.LogError(ex.Message);
+			return true;
+		}
+	}
+
 
 	static AssetItem[] GetAllItems(List<AssetItem> baseAssets, bool includeFolder = false)
 	{
