@@ -92,7 +92,6 @@ public class AssetItem
 
 	public JSONObject Serialize()
 	{
-//		JSONObject jsonObject = JSONTemplates.TOJSON(this);
 		JSONObject parentObject = new JSONObject(JSONObject.Type.OBJECT);
 
 		JSONObject jsonObject = new JSONObject(JSONObject.Type.OBJECT);
@@ -114,13 +113,11 @@ public class AssetItem
 		parentObject.AddField("AssetItem", jsonObject);
 
 		return parentObject;
-//		Debug.Log(jsonObject.Print(true));
 	}
 
 	public void Deserialize(JSONObject jsonObject)
 	{
 		AccessData(jsonObject, "");
-//		return null;
 	}
 
 	void AccessData(JSONObject obj, string key)

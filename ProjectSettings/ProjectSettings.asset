@@ -92,9 +92,6 @@ PlayerSettings:
   APKExpansionFiles: 0
   preloadShaders: 0
   StripUnusedMeshComponents: 0
-  VertexChannelCompressionMask:
-    serializedVersion: 2
-    m_Bits: 238
   iPhoneSdkVersion: 988
   iPhoneTargetOSVersion: 22
   uIPrerenderedIcon: 0
@@ -196,8 +193,6 @@ PlayerSettings:
   ps4SaveDataImagePath: 
   ps4BGMPath: 
   ps4ShareFilePath: 
-  ps4ShareOverlayImagePath: 
-  ps4PrivacyGuardImagePath: 
   ps4NPtitleDatPath: 
   ps4RemotePlayKeyAssignment: -1
   ps4EnterButtonAssignment: 1
@@ -261,7 +256,11 @@ PlayerSettings:
   psp2InfoBarColor: 0
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: 
+    2: 
+    4: 
+    7: 
   metroPackageName: ValerioTest
   metroPackageLogo: 
   metroPackageLogo140: 

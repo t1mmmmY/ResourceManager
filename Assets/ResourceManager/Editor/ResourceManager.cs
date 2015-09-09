@@ -75,12 +75,7 @@ public class ResourceManager : EditorWindow
 		{
 			if (!cleared)
 			{
-//				Debug.Log("LoadData 103");
 				LoadData();
-			}
-			else
-			{
-//				Restore();
 			}
 		}
 
@@ -162,17 +157,16 @@ public class ResourceManager : EditorWindow
 
 			if (changed)
 			{
-//				Debug.Log("SaveData 182");
 				SaveData();
 			}
 		}
 
+#if RESOURCE_MANAGER_TEST
 		//Clear/Restore pair of buttons
 		if (!cleared)
 		{
 			if (GUI.Button(new Rect(position.width - 90, position.height - 40, 80, 30), "Clear"))
 			{
-//				Debug.Log("HideUnusedAssets 200");
 				HideUnusedAssets();
 			}
 		}
@@ -180,10 +174,10 @@ public class ResourceManager : EditorWindow
 		{
 			if (GUI.Button(new Rect(position.width - 90, position.height - 40, 80, 30), "Restore"))
 			{
-//				Debug.Log("RestoreUnusedAssets 208");
 				RestoreUnusedAssets();
 			}
 		}
+
 
 		//Refresh/Check dependencies pair of buttons
 		if (!cleared)
@@ -193,6 +187,16 @@ public class ResourceManager : EditorWindow
 				Refresh();
 			}
 		}
+#else
+		//Refresh/Check dependencies pair of buttons
+		if (!cleared)
+		{
+			if (GUI.Button(new Rect(position.width - 90, position.height - 40, 80, 30), "Refresh"))
+			{
+				Refresh();
+			}
+		}
+#endif
 	}
 
 	void DrawAssets(AssetItem item, bool child)
@@ -343,7 +347,6 @@ public class ResourceManager : EditorWindow
 
 	static void RestoreUnusedAssets()
 	{
-//		Debug.Log("LoadData 347");
 		LoadData();
 		AssetItem[] allAssets = GetAllItems(_savedAssets);
 		
@@ -439,19 +442,14 @@ public class ResourceManager : EditorWindow
 			if (ContainsAssetWithTheSamePath(item.path, allItems))
 			{
 				//Item exist
-//				Debug.Log("Item exist " + item.path);
 				GetItemWithTheSamePath(item.path, allItems).enabled = GetItemWithTheSamePath(item.path, allSavedItems).enabled;
 			}
 			else if (item.tempPath != "")
 			{
 				cleared = true;
-//				Debug.Log("Some new item");
-//				_assets.Add(item);
 				//Item not exist
 			}
 		}
-//		Debug.Log("SaveData 425");
-//		SaveData();
 	}
 
 	static void AccessData(JSONObject obj)
@@ -474,7 +472,7 @@ public class ResourceManager : EditorWindow
 		}
 	}
 	
-	[MenuItem("Resource Manager/Build")]
+	[MenuItem("Resource Manager/Build...")]
 	public static void BuildGame ()
 	{
 		EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
@@ -509,13 +507,11 @@ public class ResourceManager : EditorWindow
 	static void Hide()
 	{
 		LoadAssets();
-//		Debug.Log("HideUnusedAssets 497");
 		HideUnusedAssets();
 	}
 	
 	static void Restore()
 	{
-//		Debug.Log("RestoreUnusedAssets 504");
 		RestoreUnusedAssets();
 	}
 
@@ -524,7 +520,6 @@ public class ResourceManager : EditorWindow
 	{
 		if (cleared)
 		{
-//			Debug.Log("RestoreUnusedAssets 513");
 			RestoreUnusedAssets();
 		}
 	}
