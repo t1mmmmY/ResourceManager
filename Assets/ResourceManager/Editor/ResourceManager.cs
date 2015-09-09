@@ -353,15 +353,15 @@ public class ResourceManager : EditorWindow
 			{
 				try
 				{
+					// Move file's .meta file
+					if (File.Exists(item.tempPath + ".meta"))
+					{
+						File.Move(item.tempPath + ".meta", item.path + ".meta");
+                    }
 					// Move file itself
 					if (File.Exists(item.tempPath))
 					{
 						File.Move(item.tempPath, item.path);
-					}
-					// Move its .meta file
-					if (File.Exists(item.tempPath + ".meta"))
-					{
-						File.Move(item.tempPath + ".meta", item.path + ".meta");
 					}
 				}
 				catch (System.UnauthorizedAccessException ex)
@@ -377,11 +377,7 @@ public class ResourceManager : EditorWindow
 			}
 		}
 
-
-		AssetDatabase.DeleteAsset(GetRelativePath(_tempFolderName));
 		AssetDatabase.Refresh();
-//		Debug.Log("SaveData 353");
-//		SaveData();
 
 		cleared = false;
 		LoadAssets();
