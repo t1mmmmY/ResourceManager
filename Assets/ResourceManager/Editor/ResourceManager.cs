@@ -377,7 +377,7 @@ public class ResourceManager : EditorWindow
 			}
 		}
 
-		AssetDatabase.Refresh();
+		AssetDatabase.Refresh(ImportAssetOptions.ForceUncompressedImport);
 
 		cleared = false;
 		LoadAssets();
