@@ -28,6 +28,7 @@ public class ResourceManager : EditorWindow
 		set
 		{
 			PlayerPrefs.SetInt("IS_CLEARED", (value == true) ? 1 : 0);
+			PlayerPrefs.Save();
 		}
 	}
 
