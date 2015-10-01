@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿//#define RESOURCE_MANAGER_TEST
+
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using System.Collections.Generic;
@@ -412,12 +414,12 @@ public class ResourceManager : EditorWindow
 		StringBuilder outputString = new StringBuilder();
 		for (int i = 0; i < _assets.Count; i++)
 		{
-			outputString.Append(_assets[i].Serialize().Print(true));
+			outputString.Append(_assets[i].Serialize().Print());
 
 			if (i < _assets.Count - 1)
 			{
 				outputString.Append(',');
-				outputString.AppendLine();
+//				outputString.AppendLine();
 			}
 		}
 
