@@ -34,9 +34,7 @@ public class ResourceManager : EditorWindow
 
 	static bool changed = false;
 	static bool init = false;
-
 	static Vector2 scrollPosition = Vector2.zero;
-	static string buildPath;
 
 	[MenuItem("Resource Manager/Edit...")]
 	static void Init() 
@@ -107,6 +105,7 @@ public class ResourceManager : EditorWindow
 				var dirInfo = new DirectoryInfo(@asset);
 				item.path = asset;
 				item.name = dirInfo.Name;
+				
 				//Add items recursively (folders and content)
 				item.AddChild(GetSubAssets(item.path));
 			}
@@ -488,20 +487,20 @@ public class ResourceManager : EditorWindow
 			}
 		}
 
-		if (PlayerPrefs.HasKey("BUILD_PATH"))
-		{
-			buildPath = PlayerPrefs.GetString("BUILD_PATH");
-		}
-		// Get filename.
-		buildPath = EditorUtility.SaveFilePanel("Choose Location of Built Game", buildPath, "", "");
+		string fullPath = PlayerPrefs.GetString("BUILD_PATH", "");
+		string buildPath = string.IsNullOrEmpty(fullPath) ? "" : Path.GetDirectoryName(fullPath);
+		string appName = Path.GetFileName(fullPath);
 
-		if (buildPath != string.Empty)
+		fullPath = EditorUtility.SaveFilePanel("Choose Location of Built Game", buildPath, appName, "");
+		
+		if (!string.IsNullOrEmpty(fullPath))
 		{
 			Hide();
 
-			PlayerPrefs.SetString("BUILD_PATH", buildPath);
-			// Build player.
-			BuildPipeline.BuildPlayer(scenesPath.ToArray(), buildPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
+			PlayerPrefs.SetString("BUILD_PATH", fullPath);
+			PlayerPrefs.Save();
+			// Build player
+			BuildPipeline.BuildPlayer(scenesPath.ToArray(), fullPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
 
 			Restore();
 		}
@@ -526,5 +525,4 @@ public class ResourceManager : EditorWindow
 			RestoreUnusedAssets();
 		}
 	}
-
 }

@@ -213,10 +213,8 @@ public class AssetItem
 						items.Add(item);
 					}
 				}
-				else
-				{
-					items.Add(item);
-				}
+
+				items.Add(item);
 			}
 		}	
 	}
