@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿//#define RESOURCE_MANAGER_TEST
+
+using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using System.Collections.Generic;
@@ -6,6 +8,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class ResourceManager : EditorWindow
 {
@@ -26,14 +29,13 @@ public class ResourceManager : EditorWindow
 		set
 		{
 			PlayerPrefs.SetInt("IS_CLEARED", (value == true) ? 1 : 0);
+			PlayerPrefs.Save();
 		}
 	}
 
 	static bool changed = false;
 	static bool init = false;
-
 	static Vector2 scrollPosition = Vector2.zero;
-	static string buildPath;
 
 	[MenuItem("Resource Manager/Edit...")]
 	static void Init() 
@@ -104,6 +106,7 @@ public class ResourceManager : EditorWindow
 				var dirInfo = new DirectoryInfo(@asset);
 				item.path = asset;
 				item.name = dirInfo.Name;
+				
 				//Add items recursively (folders and content)
 				item.AddChild(GetSubAssets(item.path));
 			}
@@ -409,27 +412,13 @@ public class ResourceManager : EditorWindow
 
 	static void SaveData()
 	{
-		StringBuilder outputString = new StringBuilder();
-		for (int i = 0; i < _assets.Count; i++)
-		{
-			outputString.Append(_assets[i].Serialize().Print(true));
-
-			if (i < _assets.Count - 1)
-			{
-				outputString.Append(',');
-				outputString.AppendLine();
-			}
-		}
-
-		File.WriteAllText(GetAbsolutePath(_saveDataPath), outputString.ToString());
+		File.WriteAllText(GetAbsolutePath(_saveDataPath), JsonConvert.SerializeObject(_assets));
 	}
 
 	static void LoadData()
 	{
-		_savedAssets = new List<AssetItem>();
 		string jsonText = File.ReadAllText(GetAbsolutePath(_saveDataPath));
-		JSONObject jsonObject = new JSONObject(jsonText);
-		AccessData(jsonObject);
+		_savedAssets = JsonConvert.DeserializeObject<List<AssetItem>>(jsonText);
 
 		AssetItem[] allSavedItems;
 		AssetItem[] allItems;
@@ -452,26 +441,6 @@ public class ResourceManager : EditorWindow
 		}
 	}
 
-	static void AccessData(JSONObject obj)
-	{
-		switch(obj.type)
-		{
-		case JSONObject.Type.OBJECT:
-			for(int i = 0; i < obj.list.Count; i++)
-			{
-				JSONObject j = (JSONObject)obj.list[i];
-				AssetItem item = new AssetItem();
-				item.Deserialize(j);
-				_savedAssets.Add(item);
-			}
-			break;
-		default: 
-			Debug.LogWarning("It is not an object!");
-			break;
-			
-		}
-	}
-	
 	[MenuItem("Resource Manager/Build...")]
 	public static void BuildGame ()
 	{
@@ -485,20 +454,20 @@ public class ResourceManager : EditorWindow
 			}
 		}
 
-		if (PlayerPrefs.HasKey("BUILD_PATH"))
-		{
-			buildPath = PlayerPrefs.GetString("BUILD_PATH");
-		}
-		// Get filename.
-		buildPath = EditorUtility.SaveFilePanel("Choose Location of Built Game", buildPath, "", "");
+		string fullPath = PlayerPrefs.GetString("BUILD_PATH", "");
+		string buildPath = string.IsNullOrEmpty(fullPath) ? "" : Path.GetDirectoryName(fullPath);
+		string appName = Path.GetFileName(fullPath);
 
-		if (buildPath != string.Empty)
+		fullPath = EditorUtility.SaveFilePanel("Choose Location of Built Game", buildPath, appName, "");
+		
+		if (!string.IsNullOrEmpty(fullPath))
 		{
 			Hide();
 
-			PlayerPrefs.SetString("BUILD_PATH", buildPath);
-			// Build player.
-			BuildPipeline.BuildPlayer(scenesPath.ToArray(), buildPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
+			PlayerPrefs.SetString("BUILD_PATH", fullPath);
+			PlayerPrefs.Save();
+			// Build player
+			BuildPipeline.BuildPlayer(scenesPath.ToArray(), fullPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
 
 			Restore();
 		}
@@ -523,5 +492,4 @@ public class ResourceManager : EditorWindow
 			RestoreUnusedAssets();
 		}
 	}
-
 }
