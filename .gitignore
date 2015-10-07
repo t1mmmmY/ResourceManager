@@ -61,3 +61,5 @@ Thumbs.db
 # Unity3D Generated File On Crash Reports
 #sysinfo.txt
 
+ProjectSettings/UnityAdsSettings.asset
+ProjectSettings/UnityAnalyticsManager.asset
