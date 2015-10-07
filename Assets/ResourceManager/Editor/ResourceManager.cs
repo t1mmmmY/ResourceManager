@@ -295,8 +295,8 @@ public class ResourceManager : EditorWindow
 		//Moving unchecked items to temporary folder
 		foreach (AssetItem item in allAssets)
 		{
-			if (!item.enabled)
-			{
+			if (!item.enabled && !item.isFolder)
+            {
 				unusedAssets.Add(item);
 
 				// Example /Users/{UserName}/{ProjectName}
@@ -355,8 +355,8 @@ public class ResourceManager : EditorWindow
 		
 		foreach (AssetItem item in allAssets)
 		{
-			if (!item.enabled)
-			{
+			if (!item.enabled && !item.isFolder)
+            {
 				try
 				{
 					// Move file's .meta file
