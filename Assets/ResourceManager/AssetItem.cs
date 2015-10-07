@@ -38,22 +38,6 @@ public class AssetItem
 	}
 	
 	/// <summary>
-	/// Print item with all childs
-	/// </summary>
-	public void Print()
-	{
-		ToString();
-		
-		if (childAssetItems != null)
-		{
-			foreach (AssetItem item in childAssetItems)
-			{
-				item.Print();
-			}
-		}
-	}
-	
-	/// <summary>
 	/// Change item and all childs status
 	/// </summary>
 	/// <param name="status">If set to <c>true</c> status.</param>
@@ -80,8 +64,7 @@ public class AssetItem
 		FillChild(ref items, includeFolder);
 		return items;
 	}
-	
-	
+
 	/// <summary>
 	/// AssetItem to string.
 	/// </summary>
@@ -90,111 +73,6 @@ public class AssetItem
 		return string.Format("Name {0}; Path {1}; IsFolder {2}", name, path, isFolder);
 	}
 
-	public JSONObject Serialize()
-	{
-		JSONObject parentObject = new JSONObject(JSONObject.Type.OBJECT);
-
-		JSONObject jsonObject = new JSONObject(JSONObject.Type.OBJECT);
-		jsonObject.AddField("name", name);
-		jsonObject.AddField("path", path);
-		jsonObject.AddField("tempPath", tempPath);
-		jsonObject.AddField("enabled", enabled);
-		jsonObject.AddField("opened", opened);
-		jsonObject.AddField("isFolder", isFolder);
-
-		if (childAssetItems != null)
-		{
-			for (int i = 0; i < childAssetItems.Count; i++)
-			{
-				jsonObject.AddField("childAssetItems_" + i.ToString(), childAssetItems[i].Serialize());
-			}
-		}
-
-		parentObject.AddField("AssetItem", jsonObject);
-
-		return parentObject;
-	}
-
-	public void Deserialize(JSONObject jsonObject)
-	{
-		AccessData(jsonObject, "");
-	}
-
-	void AccessData(JSONObject obj, string key)
-	{
-		switch(obj.type)
-		{
-		case JSONObject.Type.OBJECT:
-			for(int i = 0; i < obj.list.Count; i++)
-			{
-				string currentKey = (string)obj.keys[i];
-				JSONObject j = (JSONObject)obj.list[i];
-				if (currentKey.Contains("childAssetItems"))
-				{
-					if (childAssetItems == null)
-					{
-						childAssetItems = new List<AssetItem>();
-					}
-					AssetItem childItem = new AssetItem();
-					childItem.Deserialize(j);
-					childAssetItems.Add(childItem);
-				}
-				else
-				{
-					AccessData(j, currentKey);
-				}
-			}
-			break;
-		case JSONObject.Type.ARRAY:
-			foreach(JSONObject j in obj.list)
-			{
-				AccessData(j, "");
-			}
-			break;
-		case JSONObject.Type.STRING:
-			AssignParameter(key, obj);
-			break;
-		case JSONObject.Type.NUMBER:
-			AssignParameter(key, obj);
-			break;
-		case JSONObject.Type.BOOL:
-			AssignParameter(key, obj);
-			break;
-		case JSONObject.Type.NULL:
-			Debug.Log("NULL");
-			break;
-			
-		}
-	}
-
-	bool AssignParameter(string key, JSONObject value)
-	{
-		switch (key)
-		{
-		case "path":
-			path = value.str;
-			return true;
-		case "tempPath":
-			tempPath = value.str;
-			return true;
-		case "name":
-			name = value.str;
-			return true;
-		case "enabled":
-			enabled = value.b;
-			return true;
-		case "opened":
-			opened = value.b;
-			return true;
-		case "isFolder":
-			isFolder = value.b;
-			return true;
-		default:
-			return false;
-		}
-	}
-	
-	
 	/// <summary>
 	/// Fill ref array with childs
 	/// </summary>
@@ -218,8 +96,6 @@ public class AssetItem
 			}
 		}	
 	}
-	
-	
 }
 
 

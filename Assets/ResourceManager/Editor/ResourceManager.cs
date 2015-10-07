@@ -8,6 +8,7 @@ using System.Collections;
 using System.Text;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
 
 public class ResourceManager : EditorWindow
 {
@@ -411,27 +412,13 @@ public class ResourceManager : EditorWindow
 
 	static void SaveData()
 	{
-		StringBuilder outputString = new StringBuilder();
-		for (int i = 0; i < _assets.Count; i++)
-		{
-			outputString.Append(_assets[i].Serialize().Print());
-
-			if (i < _assets.Count - 1)
-			{
-				outputString.Append(',');
-//				outputString.AppendLine();
-			}
-		}
-
-		File.WriteAllText(GetAbsolutePath(_saveDataPath), outputString.ToString());
+		File.WriteAllText(GetAbsolutePath(_saveDataPath), JsonConvert.SerializeObject(_assets));
 	}
 
 	static void LoadData()
 	{
-		_savedAssets = new List<AssetItem>();
 		string jsonText = File.ReadAllText(GetAbsolutePath(_saveDataPath));
-		JSONObject jsonObject = new JSONObject(jsonText);
-		AccessData(jsonObject);
+		_savedAssets = JsonConvert.DeserializeObject<List<AssetItem>>(jsonText);
 
 		AssetItem[] allSavedItems;
 		AssetItem[] allItems;
@@ -454,26 +441,6 @@ public class ResourceManager : EditorWindow
 		}
 	}
 
-	static void AccessData(JSONObject obj)
-	{
-		switch(obj.type)
-		{
-		case JSONObject.Type.OBJECT:
-			for(int i = 0; i < obj.list.Count; i++)
-			{
-				JSONObject j = (JSONObject)obj.list[i];
-				AssetItem item = new AssetItem();
-				item.Deserialize(j);
-				_savedAssets.Add(item);
-			}
-			break;
-		default: 
-			Debug.LogWarning("It is not an object!");
-			break;
-			
-		}
-	}
-	
 	[MenuItem("Resource Manager/Build...")]
 	public static void BuildGame ()
 	{
