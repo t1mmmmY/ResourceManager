@@ -226,6 +226,12 @@ public class ResourceManager : EditorWindow
 		{
 			toggleRect.x += 20;
 		}
+
+		if (!new Rect(scrollPosition, position.size).Contains(toggleRect.position))
+		{
+			return;
+		}
+
 		Rect foldoutRect = toggleRect;
 		foldoutRect.x += toggleRect.width + 3;
 		foldoutRect.width = position.width - (foldoutRect.x + 3); 
