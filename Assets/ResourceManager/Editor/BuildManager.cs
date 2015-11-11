@@ -13,7 +13,7 @@ namespace CustomBuildManager
 		public static readonly Dictionary<BuildTargetPlatform, string> bundleId = new Dictionary<BuildTargetPlatform, string>()
 		{
 			{ BuildTargetPlatform.iOS, "com.ios.id" },
-			{ BuildTargetPlatform.Android, "com.android.id" },
+			{ BuildTargetPlatform.GooglePlay, "com.android.id" },
 			{ BuildTargetPlatform.Amazon, "com.amazon.id" }
 		};
 
@@ -21,7 +21,7 @@ namespace CustomBuildManager
 		public static readonly Dictionary<BuildTargetPlatform, string> bundleVersion = new Dictionary<BuildTargetPlatform, string>()
 		{
 			{ BuildTargetPlatform.iOS, "1.0.3" },
-			{ BuildTargetPlatform.Android, "1.0.3" },
+			{ BuildTargetPlatform.GooglePlay, "1.0.3" },
 			{ BuildTargetPlatform.Amazon, "1.0.3" }
 		};
 
@@ -29,7 +29,7 @@ namespace CustomBuildManager
 		public static readonly Dictionary<BuildTargetPlatform, int> bundleVersionCode = new Dictionary<BuildTargetPlatform, int>()
 		{
 			{ BuildTargetPlatform.iOS, 1 },
-			{ BuildTargetPlatform.Android, 1 },
+			{ BuildTargetPlatform.GooglePlay, 1 },
 			{ BuildTargetPlatform.Amazon, 1 }
 		};
 
@@ -37,7 +37,7 @@ namespace CustomBuildManager
 		public static readonly Dictionary<BuildTargetPlatform, bool> splitApplication = new Dictionary<BuildTargetPlatform, bool>()
 		{
 			{ BuildTargetPlatform.iOS, false },
-			{ BuildTargetPlatform.Android, true },
+			{ BuildTargetPlatform.GooglePlay, true },
 			{ BuildTargetPlatform.Amazon, false }
 		};
 
@@ -45,7 +45,7 @@ namespace CustomBuildManager
 		public static readonly Dictionary<BuildTargetPlatform, BuildTarget> buildTarget = new Dictionary<BuildTargetPlatform, BuildTarget>()
 		{
 			{ BuildTargetPlatform.iOS, BuildTarget.iOS },
-			{ BuildTargetPlatform.Android, BuildTarget.Android },
+			{ BuildTargetPlatform.GooglePlay, BuildTarget.Android },
 			{ BuildTargetPlatform.Amazon, BuildTarget.Android }
 		};
 	}
@@ -53,7 +53,7 @@ namespace CustomBuildManager
 	public enum BuildTargetPlatform
 	{
 		iOS,
-		Android,
+		GooglePlay,
 		Amazon
 	}
 
@@ -161,10 +161,10 @@ namespace CustomBuildManager
 			BuildGame(BuildTargetPlatform.iOS);
 		}
 
-		[MenuItem("Resource Manager/Build Android...")]
+		[MenuItem("Resource Manager/Build Google Play...")]
 		private static void BuildAndroid()
 		{
-			BuildGame(BuildTargetPlatform.Android);
+			BuildGame(BuildTargetPlatform.GooglePlay);
 		}
 
 		[MenuItem("Resource Manager/Build Amazon...")]
