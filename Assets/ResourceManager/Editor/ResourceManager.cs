@@ -37,7 +37,8 @@ public class ResourceManager : EditorWindow
 	static bool init = false;
 	static Vector2 scrollPosition = Vector2.zero;
 
-	[MenuItem("Resource Manager/Edit...")]
+
+	[MenuItem("Resource Manager/Edit...", false, 0)]
 	static void Init() 
 	{
 		Refresh();
@@ -447,45 +448,13 @@ public class ResourceManager : EditorWindow
 		}
 	}
 
-	[MenuItem("Resource Manager/Build...")]
-	public static void BuildGame ()
-	{
-		EditorBuildSettingsScene[] scenes = EditorBuildSettings.scenes;
-		List<string> scenesPath = new List<string>();
-		foreach(EditorBuildSettingsScene scene in scenes)
-		{
-			if (scene.enabled)
-			{
-				scenesPath.Add(scene.path);
-			}
-		}
-
-		string fullPath = PlayerPrefs.GetString("BUILD_PATH", "");
-		string buildPath = string.IsNullOrEmpty(fullPath) ? "" : Path.GetDirectoryName(fullPath);
-		string appName = Path.GetFileName(fullPath);
-
-		fullPath = EditorUtility.SaveFilePanel("Choose Location of Built Game", buildPath, appName, "");
-		
-		if (!string.IsNullOrEmpty(fullPath))
-		{
-			Hide();
-
-			PlayerPrefs.SetString("BUILD_PATH", fullPath);
-			PlayerPrefs.Save();
-			// Build player
-			BuildPipeline.BuildPlayer(scenesPath.ToArray(), fullPath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
-
-			Restore();
-		}
-	}
-
-	static void Hide()
+	public static void Hide()
 	{
 		LoadAssets();
 		HideUnusedAssets();
 	}
 	
-	static void Restore()
+	public static void Restore()
 	{
 		RestoreUnusedAssets();
 	}
