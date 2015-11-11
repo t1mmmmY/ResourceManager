@@ -118,6 +118,20 @@ namespace CustomBuildManager
 				// Build player
 				BuildPipeline.BuildPlayer(scenesPath.ToArray(), fullPath, BuildSettings.buildTarget[targetPlatform], BuildOptions.None);
 
+				//Rename obb file
+				if (BuildSettings.splitApplication[targetPlatform])
+				{
+					FileInfo apkInfo = new FileInfo(fullPath);
+					string obbFilePath = fullPath.Replace(apkInfo.Extension, ".main.obb");
+
+					FileInfo obbInfo = new FileInfo(obbFilePath);
+
+					string obbNewPath = string.Format("{0}/main.{1}.{2}.obb", obbInfo.Directory.FullName, 
+					                                  BuildSettings.bundleVersionCode[targetPlatform], 
+					                                  BuildSettings.bundleId[targetPlatform]);
+
+					File.Move(obbFilePath, obbNewPath);
+				}
 
 	#region Restore old settings
 				
