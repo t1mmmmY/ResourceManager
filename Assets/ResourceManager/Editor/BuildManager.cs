@@ -33,6 +33,14 @@ namespace CustomBuildManager
 			{ BuildTargetPlatform.Amazon, 1 }
 		};
 
+		//Set Split application here
+		public static readonly Dictionary<BuildTargetPlatform, bool> splitApplication = new Dictionary<BuildTargetPlatform, bool>()
+		{
+			{ BuildTargetPlatform.iOS, false },
+			{ BuildTargetPlatform.Android, true },
+			{ BuildTargetPlatform.Amazon, false }
+		};
+
 		//Should not change this
 		public static readonly Dictionary<BuildTargetPlatform, BuildTarget> buildTarget = new Dictionary<BuildTargetPlatform, BuildTarget>()
 		{
@@ -93,6 +101,7 @@ namespace CustomBuildManager
 				string oldBundleId = PlayerSettings.bundleIdentifier;
 				string oldBundleVersion = PlayerSettings.bundleVersion;
 				int oldBundleVersionCode = PlayerSettings.Android.bundleVersionCode;
+				bool oldSplitApplication = PlayerSettings.Android.useAPKExpansionFiles;
 
 	#endregion
 
@@ -102,6 +111,7 @@ namespace CustomBuildManager
 				PlayerSettings.bundleIdentifier = BuildSettings.bundleId[targetPlatform];
 				PlayerSettings.bundleVersion = BuildSettings.bundleVersion[targetPlatform];
 				PlayerSettings.Android.bundleVersionCode = BuildSettings.bundleVersionCode[targetPlatform];
+				PlayerSettings.Android.useAPKExpansionFiles = BuildSettings.splitApplication[targetPlatform];
 
 	#endregion
 
@@ -114,6 +124,7 @@ namespace CustomBuildManager
 				PlayerSettings.bundleIdentifier = oldBundleId;
 				PlayerSettings.bundleVersion = oldBundleVersion;
 				PlayerSettings.Android.bundleVersionCode = oldBundleVersionCode;
+				PlayerSettings.Android.useAPKExpansionFiles = oldSplitApplication;
 
 	#endregion
 
