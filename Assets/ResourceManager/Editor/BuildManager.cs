@@ -130,6 +130,10 @@ namespace CustomBuildManager
 					                                  BuildSettings.bundleVersionCode[targetPlatform], 
 					                                  BuildSettings.bundleId[targetPlatform]);
 
+					if (File.Exists(obbNewPath))
+					{
+						File.Delete(obbNewPath);
+					}
 					File.Move(obbFilePath, obbNewPath);
 				}
 
