@@ -336,16 +336,14 @@ public class ResourceManager : EditorWindow
 				
 				try
 				{
-					string oldItemPath = GetAbsolutePath(item.path);
-					oldItemPath = item.path;
-					newAbsPath = "Assets/" + "Resources" + "/" + itemRandomName;
+					string oldItemPath = item.path;
 					newAbsPath = oldItemPath.Replace("_Resources/", "Resources/");
 					
-					if (!AssetDatabase.IsValidFolder("Assets/" + "Resources"))
-					{
-						AssetDatabase.CreateFolder("Assets", "Resources");
-						AssetDatabase.Refresh();
-					}
+//					if (!AssetDatabase.IsValidFolder("Assets/" + "Resources"))
+//					{
+//						AssetDatabase.CreateFolder("Assets", "Resources");
+//						AssetDatabase.Refresh();
+//					}
 
 					CreateSubDirectories(newAbsPath);
 
@@ -414,7 +412,7 @@ public class ResourceManager : EditorWindow
 		do
 		{
 			parent = Directory.GetParent(itemPath);
-			if (parent.Name != "Resources")
+//			if (parent.Name != "Resources")
 			{
 				listOfFolders.Add(parent.FullName);
 			}
