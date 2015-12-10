@@ -322,6 +322,7 @@ public class ResourceManager : EditorWindow
 		{
 			if (item.enabled && !item.isFolder)
 			{
+				//ename Resources folder to _Resources
 				item.path = RenameResourcesFolder(item);
 				
 				unusedAssets.Add(item);
@@ -337,17 +338,13 @@ public class ResourceManager : EditorWindow
 				try
 				{
 					string oldItemPath = item.path;
+					//Path for used assets. All other will stay in _Resources.
 					newAbsPath = oldItemPath.Replace("_Resources/", "Resources/");
-					
-//					if (!AssetDatabase.IsValidFolder("Assets/" + "Resources"))
-//					{
-//						AssetDatabase.CreateFolder("Assets", "Resources");
-//						AssetDatabase.Refresh();
-//					}
 
+					//Create sub folders in the new Resources folder
 					CreateSubDirectories(newAbsPath);
 
-
+					//Move used asset to the new Resorces folder
 					string error = AssetDatabase.MoveAsset(oldItemPath, newAbsPath);
 					if (error != string.Empty)
 					{
@@ -390,6 +387,7 @@ public class ResourceManager : EditorWindow
 						Debug.LogError(error);
 					}
 
+					//Add new folder to the list of folders that was renamed
 					RenamedFolder rf = new RenamedFolder(resourcesPath, resourcesPath.Replace("Resources", "_Resources"));
 					renamedFolders.Add(rf);
 
@@ -412,16 +410,14 @@ public class ResourceManager : EditorWindow
 		do
 		{
 			parent = Directory.GetParent(itemPath);
-//			if (parent.Name != "Resources")
-			{
-				listOfFolders.Add(parent.FullName);
-			}
+			listOfFolders.Add(parent.FullName);
 			itemPath = parent.FullName;
 		
 		} while (parent.Name != "Resources");
 
 		if (listOfFolders.Count > 0)
 		{
+			//First create root directories, than child directories
 			for (int i = listOfFolders.Count - 1; i >= 0; i--)
 			{
 				if (!Directory.Exists(listOfFolders[i]))
@@ -445,6 +441,7 @@ public class ResourceManager : EditorWindow
 			{
 				try
 				{
+					//Move used assets from Resources to _Resources
 					AssetDatabase.MoveAsset(item.tempPath, item.path);
 				}
 				catch (System.UnauthorizedAccessException ex)
@@ -460,14 +457,17 @@ public class ResourceManager : EditorWindow
 			}
 		}
 
+		//Return old names after all assets was returned to _Resources folder
 		foreach (RenamedFolder rf in renamedFolders)
 		{
 			try
 			{
 				if (AssetDatabase.IsValidFolder(rf.oldFolderName))
 				{
+					//Delete Resource folder
 					AssetDatabase.DeleteAsset(rf.oldFolderName);
 					AssetDatabase.Refresh();
+					//Rename _Resources with all assets folder to Resources
 					AssetDatabase.RenameAsset(rf.newFolderName, "Resources");
 				}
 			}
@@ -478,8 +478,13 @@ public class ResourceManager : EditorWindow
 		}
 
 		AssetDatabase.Refresh();
-		
+
+		//Save date
+		SaveData();
+
 		cleared = false;
+
+		//Refresh
 		LoadAssets();
 	}
 	
