@@ -1,4 +1,4 @@
-﻿//#define RESOURCE_MANAGER_TEST
+﻿#define RESOURCE_MANAGER_TEST
 
 using UnityEngine;
 using UnityEditor;
@@ -10,15 +10,30 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 
+
+public struct RenamedFolder
+{
+	public string oldFolderName;
+	public string newFolderName;
+
+	public RenamedFolder(string oldName, string newName)
+	{
+		oldFolderName = oldName;
+		newFolderName = newName;
+	}
+}
+
 public class ResourceManager : EditorWindow
 {
 	//Modify these parameters as you want
 	static string _saveDataPath = "SaveData.txt";
 	static string _tempFolderName = "TempResources";
-
+	
 	static List<AssetItem> _assets;
 	static List<AssetItem> _savedAssets;
 
+	static List<RenamedFolder> renamedFolders;
+	
 	static Rect toggleRect;
 	static bool cleared
 	{ 
@@ -32,31 +47,32 @@ public class ResourceManager : EditorWindow
 			PlayerPrefs.Save();
 		}
 	}
-
+	
 	static bool changed = false;
 	static bool init = false;
 	static Vector2 scrollPosition = Vector2.zero;
-
-
+	
+	
 	[MenuItem("Resource Manager/Edit...", false, 0)]
 	static void Init() 
 	{
+		cleared = false;
 		Refresh();
 		ResourceManager window = (ResourceManager)EditorWindow.GetWindow (typeof (ResourceManager));
 		window.Show();
 	}
-
+	
 	static void Refresh()
 	{
 		LoadAssets();
 	}
-
+	
 	static void LoadAssets()
 	{
 		// Get all assets that contained in different Resources folders
 		var rootPaths = AssetDatabase.FindAssets("Resources").Select(item => AssetDatabase.GUIDToAssetPath(item));
 		_assets = new List<AssetItem>();
-
+		
 		foreach(var path in rootPaths)
 		{
 			var dirInfo = new DirectoryInfo(path);
@@ -64,16 +80,16 @@ public class ResourceManager : EditorWindow
 			if (!string.Equals(dirInfo.Name, _tempFolderName))
 			{
 				var rootItem = new AssetItem();
-
+				
 				rootItem.path = path;
 				rootItem.name = dirInfo.Name;
 				rootItem.isFolder = true;
 				rootItem.AddChild(GetSubAssets(rootItem.path));
-
+				
 				_assets.Add(rootItem);
 			}
 		}
-
+		
 		if (File.Exists(GetAbsolutePath(_saveDataPath)))
 		{
 			if (!cleared)
@@ -81,10 +97,10 @@ public class ResourceManager : EditorWindow
 				LoadData();
 			}
 		}
-
+		
 		init = true;
 	}
-
+	
 	static AssetItem[] GetSubAssets(string path)
 	{
 		// Get all assets contains in folder with "path" path
@@ -92,16 +108,16 @@ public class ResourceManager : EditorWindow
 		//Select assets that are in current folder (path) only. No subfolders and other folders
 		allSubAssets = allSubAssets.Where(item => string.Equals(Path.GetDirectoryName(item), path)).Distinct<string>();
 		var subAssets = new List<AssetItem>();
-
+		
 		//Find content
 		foreach(var asset in allSubAssets)
 		{
 			FileAttributes attr = File.GetAttributes(@asset);
 			bool isDirectory = (attr & FileAttributes.Directory) == FileAttributes.Directory;
-
+			
 			var item = new AssetItem();
 			item.isFolder = isDirectory;
-
+			
 			if (isDirectory)
 			{
 				var dirInfo = new DirectoryInfo(@asset);
@@ -117,23 +133,23 @@ public class ResourceManager : EditorWindow
 				item.path = asset;
 				item.name = fileInfo.Name;
 			}
-
+			
 			subAssets.Add(item);
-        }
-
+		}
+		
 		return subAssets.ToArray();
 	}
-
+	
 	static bool ContainsAssetWithTheSamePath(string path, AssetItem[] items)
 	{
 		return items.Any(i => i.path == path);
 	}
-
+	
 	static AssetItem GetItemWithTheSamePath(string path, AssetItem[] items)
 	{
 		return items.FirstOrDefault(i => i.path == path);
 	}
-
+	
 	void OnGUI() 
 	{
 		//If initialize already
@@ -141,8 +157,8 @@ public class ResourceManager : EditorWindow
 		{
 			changed = false;
 			toggleRect = new Rect(3, 3, 15, 15);
-
-
+			
+			
 			int countItems = GetAllItems(_assets, true).Length;
 			scrollPosition = GUI.BeginScrollView(new Rect(0, 0, position.width, position.height), 
 			                                     scrollPosition, 
@@ -158,14 +174,15 @@ public class ResourceManager : EditorWindow
 				}
 			}
 			GUI.EndScrollView();
-
+			
 			if (changed)
 			{
 				SaveData();
 			}
 		}
+		
+		#if RESOURCE_MANAGER_TEST
 
-#if RESOURCE_MANAGER_TEST
 		//Clear/Restore pair of buttons
 		if (!cleared)
 		{
@@ -181,8 +198,8 @@ public class ResourceManager : EditorWindow
 				RestoreUnusedAssets();
 			}
 		}
-
-
+		
+		
 		//Refresh/Check dependencies pair of buttons
 		if (!cleared)
 		{
@@ -191,7 +208,7 @@ public class ResourceManager : EditorWindow
 				Refresh();
 			}
 		}
-#else
+		#else
 		//Refresh/Check dependencies pair of buttons
 		if (!cleared)
 		{
@@ -200,9 +217,9 @@ public class ResourceManager : EditorWindow
 				Refresh();
 			}
 		}
-#endif
+		#endif
 	}
-
+	
 	void DrawAssets(AssetItem item, bool child)
 	{
 		DrawItem(item, child);
@@ -220,23 +237,23 @@ public class ResourceManager : EditorWindow
 			}
 		}
 	}
-
+	
 	void DrawItem(AssetItem item, bool child)
 	{
 		if (child)
 		{
 			toggleRect.x += 20;
 		}
-
+		
 		if (!new Rect(scrollPosition, position.size).Contains(toggleRect.position))
 		{
 			return;
 		}
-
+		
 		Rect foldoutRect = toggleRect;
 		foldoutRect.x += toggleRect.width + 3;
 		foldoutRect.width = position.width - (foldoutRect.x + 3); 
-
+		
 		if (!cleared)
 		{
 			bool oldEnabledStatus = item.enabled;
@@ -251,7 +268,7 @@ public class ResourceManager : EditorWindow
 		{
 			EditorGUI.Toggle(toggleRect, item.enabled);
 		}
-
+		
 		if (item.isFolder)
 		{
 			item.opened = EditorGUI.Foldout(foldoutRect, item.opened, item.name);
@@ -285,12 +302,12 @@ public class ResourceManager : EditorWindow
 			return Path.Combine(Application.dataPath, localPath);
 		}
 	}
-
+	
 	static string GetRelativePath(string localPath)
 	{
 		return Path.Combine("Assets", localPath);
 	}
-
+	
 	/// <summary>
 	/// Hides the unused assets in temporary folder using AssetDatabase class.
 	/// </summary>
@@ -298,43 +315,47 @@ public class ResourceManager : EditorWindow
 	{
 		AssetItem[] allAssets = GetAllItems(_assets);
 		List<AssetItem> unusedAssets = new List<AssetItem>();
-
+		renamedFolders = new List<RenamedFolder>();
+		
 		//Moving unchecked items to temporary folder
 		foreach (AssetItem item in allAssets)
 		{
-			if (!item.enabled && !item.isFolder)
-            {
+			if (item.enabled && !item.isFolder)
+			{
+				item.path = RenameResourcesFolder(item);
+				
 				unusedAssets.Add(item);
-
-				// Example /Users/{UserName}/{ProjectName}
-				string assetParentAbsPath = Directory.GetParent(Application.dataPath).FullName;
-				// Put Folder out of Unity's Asset folder
-				// Example /Users/{UserName}/{ProjectName}/{TempFolderName} 
-				string tempFolderAbsPath = Path.Combine(assetParentAbsPath, _tempFolderName);
-				// Example /Users/{UserName}/{ProjectName}/{TempFolderName}/{FileName.xxx}
-				string itemRandomName = Path.GetRandomFileName();
+				
+				string assetParentAbsPath = Application.dataPath;
+				string tempFolderAbsPath = Path.Combine(assetParentAbsPath, "Resources");
+				
+				string itemRandomName = Path.GetFileName(item.path);
+				
 				string newAbsPath = Path.Combine(tempFolderAbsPath, itemRandomName);
 
-				if (!Directory.Exists(tempFolderAbsPath))
-				{
-					Directory.CreateDirectory(tempFolderAbsPath);
-				}
-
+				
 				try
 				{
 					string oldItemPath = GetAbsolutePath(item.path);
-
-					// Move file itself
-					if (File.Exists(oldItemPath))
+					oldItemPath = item.path;
+					newAbsPath = "Assets/" + "Resources" + "/" + itemRandomName;
+					newAbsPath = oldItemPath.Replace("_Resources/", "Resources/");
+					
+					if (!AssetDatabase.IsValidFolder("Assets/" + "Resources"))
 					{
-						File.Move(oldItemPath, newAbsPath);
-					}
-					// Move its .meta file
-					if (File.Exists(oldItemPath + ".meta"))
-					{
-						File.Move(oldItemPath + ".meta", newAbsPath + ".meta");
+						AssetDatabase.CreateFolder("Assets", "Resources");
+						AssetDatabase.Refresh();
 					}
 
+					CreateSubDirectories(newAbsPath);
+
+
+					string error = AssetDatabase.MoveAsset(oldItemPath, newAbsPath);
+					if (error != string.Empty)
+					{
+						Debug.LogError(error);
+					}
+					
 					item.tempPath = newAbsPath;
 				}
 				catch (System.UnauthorizedAccessException ex)
@@ -347,14 +368,74 @@ public class ResourceManager : EditorWindow
 				}
 			}
 		}
-
+		
 		AssetDatabase.Refresh();
 		SaveData();
-
+		
 		cleared = true;
 	}
 
+	
+	static string RenameResourcesFolder(AssetItem item)
+	{
+		string resourcesPath = item.path.Remove(item.path.IndexOf("Resources/") + "Resources".Length);
 
+		if (AssetDatabase.IsValidFolder(resourcesPath))
+		{
+			if (!AssetDatabase.IsValidFolder(resourcesPath.Replace("Resources", "_Resources")))
+			{
+				try
+				{
+					string error = AssetDatabase.RenameAsset(resourcesPath, "_Resources");
+					if (error != string.Empty)
+					{
+						Debug.LogError(error);
+					}
+
+					RenamedFolder rf = new RenamedFolder(resourcesPath, resourcesPath.Replace("Resources", "_Resources"));
+					renamedFolders.Add(rf);
+
+					AssetDatabase.Refresh();
+				}
+				catch (System.Exception ex)
+				{
+					Debug.LogException(ex);
+				}
+			}
+		}
+		
+		return item.path.Replace("Resources/", "_Resources/");
+	}
+
+	static void CreateSubDirectories(string itemPath)
+	{
+		List<string> listOfFolders = new List<string>();
+		DirectoryInfo parent;
+		do
+		{
+			parent = Directory.GetParent(itemPath);
+			if (parent.Name != "Resources")
+			{
+				listOfFolders.Add(parent.FullName);
+			}
+			itemPath = parent.FullName;
+		
+		} while (parent.Name != "Resources");
+
+		if (listOfFolders.Count > 0)
+		{
+			for (int i = listOfFolders.Count - 1; i >= 0; i--)
+			{
+				if (!Directory.Exists(listOfFolders[i]))
+				{
+					Directory.CreateDirectory(listOfFolders[i]);
+				}
+			}
+		}
+
+		AssetDatabase.Refresh();
+	}
+	
 	static void RestoreUnusedAssets()
 	{
 		LoadData();
@@ -362,20 +443,11 @@ public class ResourceManager : EditorWindow
 		
 		foreach (AssetItem item in allAssets)
 		{
-			if (!item.enabled && !item.isFolder)
-            {
+			if (item.enabled && !item.isFolder)
+			{
 				try
 				{
-					// Move file's .meta file
-					if (File.Exists(item.tempPath + ".meta"))
-					{
-						File.Move(item.tempPath + ".meta", item.path + ".meta");
-                    }
-					// Move file itself
-					if (File.Exists(item.tempPath))
-					{
-						File.Move(item.tempPath, item.path);
-					}
+					AssetDatabase.MoveAsset(item.tempPath, item.path);
 				}
 				catch (System.UnauthorizedAccessException ex)
 				{
@@ -385,17 +457,34 @@ public class ResourceManager : EditorWindow
 				{
 					Debug.LogError(ex.Message);
 				}
-
+				
 				item.tempPath = "";
 			}
 		}
 
-		AssetDatabase.Refresh(ImportAssetOptions.ForceUncompressedImport);
+		foreach (RenamedFolder rf in renamedFolders)
+		{
+			try
+			{
+				if (AssetDatabase.IsValidFolder(rf.oldFolderName))
+				{
+					AssetDatabase.DeleteAsset(rf.oldFolderName);
+					AssetDatabase.Refresh();
+					AssetDatabase.RenameAsset(rf.newFolderName, "Resources");
+				}
+			}
+			catch (System.Exception ex)
+			{
+				Debug.LogException(ex);
+			}
+		}
 
+		AssetDatabase.Refresh();
+		
 		cleared = false;
 		LoadAssets();
 	}
-
+	
 	static AssetItem[] GetAllItems(List<AssetItem> baseAssets, bool includeFolder = false)
 	{
 		List<AssetItem> childItems = new List<AssetItem>();
@@ -403,36 +492,36 @@ public class ResourceManager : EditorWindow
 		{
 			childItems.AddRange(item.GetChildItems(includeFolder));
 		}
-
+		
 		return childItems.ToArray();
 	}
-
+	
 	void OnInspectorUpdate() 
 	{
 		if (!init)
 		{
 			LoadAssets();
 		}
-
+		
 		Repaint();
 	}
-
+	
 	static void SaveData()
 	{
 		File.WriteAllText(GetAbsolutePath(_saveDataPath), JsonConvert.SerializeObject(_assets));
 	}
-
+	
 	static void LoadData()
 	{
 		string jsonText = File.ReadAllText(GetAbsolutePath(_saveDataPath));
 		_savedAssets = JsonConvert.DeserializeObject<List<AssetItem>>(jsonText);
-
+		
 		AssetItem[] allSavedItems;
 		AssetItem[] allItems;
 		allSavedItems = GetAllItems(_savedAssets, true);
 		allItems = GetAllItems(_assets, true);
 		//Get all saved items
-
+		
 		foreach (AssetItem item in allSavedItems)
 		{
 			if (ContainsAssetWithTheSamePath(item.path, allItems))
@@ -442,12 +531,12 @@ public class ResourceManager : EditorWindow
 			}
 			else if (item.tempPath != "")
 			{
-				cleared = true;
+//				cleared = true;
 				//Item not exist
 			}
 		}
 	}
-
+	
 	public static void Hide()
 	{
 		LoadAssets();
@@ -458,8 +547,8 @@ public class ResourceManager : EditorWindow
 	{
 		RestoreUnusedAssets();
 	}
-
-
+	
+	
 	void OnDestroy()
 	{
 		if (cleared)
