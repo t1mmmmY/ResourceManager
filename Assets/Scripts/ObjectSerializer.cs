@@ -408,25 +408,25 @@ public class ObjectSerializer : MonoBehaviour
 	}
 
 	[ContextMenu ("Serialize mode A")]
-	void SerializeModeA()
+	public void SerializeModeA()
 	{
 		this.serializedModeA = SerializeCurrentMode("Mode A", this.modeAGUID);
 	}
 
 	[ContextMenu ("Serialize mode B")]
-	void SerializeModeB()
+	public void SerializeModeB()
 	{
 		this.serializedModeB = SerializeCurrentMode("Mode B", this.modeBGUID);
 	}
 
 	[ContextMenu ("Enable mode A")]
-	void EnableModeA()
+	public void EnableModeA()
 	{
 		RestoreMode(this.serializedModeA);
 	}
 
 	[ContextMenu ("Enable mode B")]
-	void EnableModeB()
+	public void EnableModeB()
 	{
 		RestoreMode(this.serializedModeB);
 	}
