@@ -9,7 +9,12 @@ using System.Linq;
 public class TargetParameters
 {
 	public Component Component;
-	public String ParamName;
+	public ComponentProperties property;
+
+	public void SetPropertiesList(string[] propertyNames)
+	{
+		property.SetProperties(propertyNames);
+	}
 }
 
 [Serializable]
@@ -79,6 +84,9 @@ public class ObjectSerializer : MonoBehaviour
 	[SerializeField]
 	private string serializedModeB;
 
+
+	private int parametersCount = 0;
+
 	void Start()
 	{
 		if (string.IsNullOrEmpty(GUID))
@@ -88,48 +96,81 @@ public class ObjectSerializer : MonoBehaviour
 			this.modeBGUID = Guid.NewGuid().ToString();
 		}
 	}
+
+	void Update()
+	{
+		if (!Application.isPlaying)
+		{
+			foreach (TargetParameters parameter in trackableParameters)
+			{
+				parameter.SetPropertiesList(InspectComponent(parameter.Component));
+			}
+			parametersCount = trackableParameters.Count();
+		}
+	}
 		
 	[ContextMenu ("Inspect Object")]
 	void InspectObject()
 	{
 		foreach (var component in gameObject.GetComponents(typeof(Component)))
 		{
-			Type type = component.GetType();
-			Debug.Log(">> " + type);
+			InspectComponent(component, true);
+		}
+	}
 
-			foreach (var f in type.GetFields().Where(f => f.IsPublic))
+	string[] InspectComponent(Component component, bool log = false)
+	{
+		Type type = component.GetType();
+		if (log)
+		{
+			Debug.Log(">> " + type);
+		}
+
+		List<string> propertyNames = new List<string>();
+
+		foreach (var f in type.GetFields().Where(f => f.IsPublic))
+		{
+			propertyNames.Add(f.Name);
+			if (log)
 			{
 				Debug.Log("Field: " + f.Name + " : " + f.FieldType + "; " + f.GetValue(component));
 			}
+		}
 
-			var ignoredProperties = new List<String>();
-			ignoredProperties.Add("rigidbody");
-			ignoredProperties.Add("rigidbody2D");
-			ignoredProperties.Add("camera");
-			ignoredProperties.Add("light");
-			ignoredProperties.Add("animation");
-			ignoredProperties.Add("constantForce");
-			ignoredProperties.Add("renderer");
-			ignoredProperties.Add("audio");
-			ignoredProperties.Add("guiText");
-			ignoredProperties.Add("networkView");
-			ignoredProperties.Add("guiElement");
-			ignoredProperties.Add("guiTexture");
-			ignoredProperties.Add("collider");
-			ignoredProperties.Add("collider2D");
-			ignoredProperties.Add("hingeJoint");
-			ignoredProperties.Add("particleEmitter");
-			ignoredProperties.Add("particleSystem");
+		var ignoredProperties = new List<String>();
+		ignoredProperties.Add("rigidbody");
+		ignoredProperties.Add("rigidbody2D");
+		ignoredProperties.Add("camera");
+		ignoredProperties.Add("light");
+		ignoredProperties.Add("animation");
+		ignoredProperties.Add("constantForce");
+		ignoredProperties.Add("renderer");
+		ignoredProperties.Add("audio");
+		ignoredProperties.Add("guiText");
+		ignoredProperties.Add("networkView");
+		ignoredProperties.Add("guiElement");
+		ignoredProperties.Add("guiTexture");
+		ignoredProperties.Add("collider");
+		ignoredProperties.Add("collider2D");
+		ignoredProperties.Add("hingeJoint");
+		ignoredProperties.Add("particleEmitter");
+		ignoredProperties.Add("particleSystem");
 
-			// Ignore this two for now
-			ignoredProperties.Add("mesh");
-			ignoredProperties.Add("material");
+		// Ignore this two for now
+		ignoredProperties.Add("mesh");
+		ignoredProperties.Add("material");
 
-			foreach (var p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(i => !ignoredProperties.Contains(i.Name)))
+
+		foreach (var p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(i => !ignoredProperties.Contains(i.Name)))
+		{
+			propertyNames.Add(p.Name);
+			if (log)
 			{
 				Debug.Log("Property: '" + p.Name + "' [" + p.PropertyType + "] Value: " + p.GetValue(component, null));
 			}
 		}
+
+		return propertyNames.ToArray();
 	}
 
 	/// <summary>
@@ -155,7 +196,7 @@ public class ObjectSerializer : MonoBehaviour
 			// Get type of component
 			Type type = component.GetType();
 			// Build list of required parameter names. To avoid reading all the properties
-			var parameterList = this.trackableParameters.Where(i => i.Component == component).Select(i => i.ParamName);
+			var parameterList = this.trackableParameters.Where(i => i.Component == component).Select(i => i.property.ParamName);
 			// Read only required parameters of gameObject's component
 			foreach (var f in type.GetFields().Where(i => i.IsPublic && parameterList.Contains(i.Name)))
 			{

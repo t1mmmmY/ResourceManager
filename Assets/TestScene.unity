@@ -193,6 +193,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1910490730}
+  - 114: {fileID: 1910490731}
   - 114: {fileID: 1910490729}
   m_Layer: 0
   m_Name: SomeObject
@@ -209,16 +210,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1910490728}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f4b8794bc4f04082a5af62e79d56fe5, type: 3}
+  m_Script: {fileID: 11500000, guid: 26c30d55d0e75433bb271b09b63e04a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  potionResult:
-    properties:
-    - position
-    - color
-    - anything
-    current: 1
-  otherStuff: 
+  TestString: test string
+  TestInt: 10
+  TestFloat: 0.99
+  TestEnum: 1
 --- !u!4 &1910490730
 Transform:
   m_ObjectHideFlags: 0
@@ -231,3 +229,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &1910490731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1910490728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90e0343ab874e4993a8a365a623c3ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GUID: 54b1ee57-63a7-42a5-8a20-27df9180b29f
+  trackableParameters:
+  - Component: {fileID: 1910490730}
+    property:
+      properties:
+      - position
+      - localPosition
+      - eulerAngles
+      - localEulerAngles
+      - right
+      - up
+      - forward
+      - rotation
+      - localRotation
+      - localScale
+      - parent
+      - worldToLocalMatrix
+      - localToWorldMatrix
+      - root
+      - childCount
+      - lossyScale
+      - hasChanged
+      - transform
+      - gameObject
+      - tag
+      - name
+      - hideFlags
+      current: 0
+  - Component: {fileID: 1910490729}
+    property:
+      properties:
+      - TestString
+      - TestInt
+      - TestFloat
+      - TestEnum
+      - useGUILayout
+      - enabled
+      - isActiveAndEnabled
+      - transform
+      - gameObject
+      - tag
+      - name
+      - hideFlags
+      current: 1
+  - Component: {fileID: 1910490729}
+    property:
+      properties:
+      - TestString
+      - TestInt
+      - TestFloat
+      - TestEnum
+      - useGUILayout
+      - enabled
+      - isActiveAndEnabled
+      - transform
+      - gameObject
+      - tag
+      - name
+      - hideFlags
+      current: 5
+  cachedUnityObjects: []
+  _____________: 0
+  modeAGUID: 2120d575-ba43-4442-a691-78469dbb135b
+  modeBGUID: ee0e2dd0-9d56-4b40-8bfe-631f7cc6b972
+  serializedModeA: 
+  serializedModeB: 
