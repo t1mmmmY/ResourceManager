@@ -4,11 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.ComponentModel;
 
 [Serializable]
 public class TargetParameters
 {
-	public Component Component;
+	public UnityEngine.Component Component;
 	public ComponentProperties property;
 
 	public void SetPropertiesList(string[] propertyNames)
@@ -84,9 +85,6 @@ public class ObjectSerializer : MonoBehaviour
 	[SerializeField]
 	private string serializedModeB;
 
-
-	private int parametersCount = 0;
-
 	void Start()
 	{
 		if (string.IsNullOrEmpty(GUID))
@@ -105,20 +103,19 @@ public class ObjectSerializer : MonoBehaviour
 			{
 				parameter.SetPropertiesList(InspectComponent(parameter.Component));
 			}
-			parametersCount = trackableParameters.Count();
 		}
 	}
 		
 	[ContextMenu ("Inspect Object")]
 	void InspectObject()
 	{
-		foreach (var component in gameObject.GetComponents(typeof(Component)))
+		foreach (var component in gameObject.GetComponents(typeof(UnityEngine.Component)))
 		{
 			InspectComponent(component, true);
 		}
 	}
 
-	string[] InspectComponent(Component component, bool log = false)
+	string[] InspectComponent(UnityEngine.Component component, bool log = false)
 	{
 		Type type = component.GetType();
 		if (log)
@@ -130,7 +127,14 @@ public class ObjectSerializer : MonoBehaviour
 
 		foreach (var f in type.GetFields().Where(f => f.IsPublic))
 		{
-			propertyNames.Add(f.Name);
+			bool fieldHasConverter = TypeDescriptor.GetConverter(f.FieldType).CanConvertFrom(typeof(String));
+			bool fieldIsUnityObjectSubclass = f.FieldType.IsSubclassOf(typeof(UnityEngine.Object));
+			bool fieldTypeIsWrappedProperly = f.FieldType == typeof(Vector3) || f.FieldType == typeof(Quaternion);
+
+			if (fieldHasConverter || fieldIsUnityObjectSubclass || fieldTypeIsWrappedProperly)
+			{
+				propertyNames.Add(f.Name);
+			}
 			if (log)
 			{
 				Debug.Log("Field: " + f.Name + " : " + f.FieldType + "; " + f.GetValue(component));
@@ -156,14 +160,22 @@ public class ObjectSerializer : MonoBehaviour
 		ignoredProperties.Add("particleEmitter");
 		ignoredProperties.Add("particleSystem");
 
-		// Ignore this two for now
+		// Ignore this for now
 		ignoredProperties.Add("mesh");
 		ignoredProperties.Add("material");
-
+		ignoredProperties.Add("transform");
+		ignoredProperties.Add("gameObject");
 
 		foreach (var p in type.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(i => !ignoredProperties.Contains(i.Name)))
 		{
-			propertyNames.Add(p.Name);
+			bool propHasConverter = TypeDescriptor.GetConverter(p.PropertyType).CanConvertFrom(typeof(String));
+			bool propIsUnityObjectSubclass = p.PropertyType.IsSubclassOf(typeof(UnityEngine.Object));
+			bool propTypeIsWrappedProperly = p.PropertyType == typeof(Vector3) || p.PropertyType == typeof(Quaternion);
+
+			if (propHasConverter || propIsUnityObjectSubclass || propTypeIsWrappedProperly)
+			{
+				propertyNames.Add(p.Name);
+			}
 			if (log)
 			{
 				Debug.Log("Property: '" + p.Name + "' [" + p.PropertyType + "] Value: " + p.GetValue(component, null));
@@ -189,7 +201,7 @@ public class ObjectSerializer : MonoBehaviour
 		// Build list that contains Components (only necessary information)
 		var trackComponentsList = this.trackableParameters.Select(i => i.Component);
 		// Build list of gameObject's components that present in prev list
-		var trackComponents = gameObject.GetComponents(typeof(Component)).Where(c => trackComponentsList.Contains(c));
+		var trackComponents = gameObject.GetComponents(typeof(UnityEngine.Component)).Where(c => trackComponentsList.Contains(c));
 		// Go through particular gameObject's components only
 		foreach (var component in trackComponents)
 		{
@@ -200,7 +212,6 @@ public class ObjectSerializer : MonoBehaviour
 			// Read only required parameters of gameObject's component
 			foreach (var f in type.GetFields().Where(i => i.IsPublic && parameterList.Contains(i.Name)))
 			{
-				//TODO Check if type implements IConvertible interface
 				// Simple types derived from struct and string serialize as is
 				if (f.FieldType.IsValueType || f.FieldType == typeof(String))
 				{
@@ -215,14 +226,14 @@ public class ObjectSerializer : MonoBehaviour
 					}
 					else
 					{
-						paramValue = f.GetValue(component).ToString();
+						paramValue = TypeDescriptor.GetConverter(f.FieldType).ConvertToString(f.GetValue(component));
 					}
 
 					Parameter param = new Parameter();
 					param.ComponentName = type.ToString();
 					param.ParamName = f.Name;
 					param.ParamType = f.FieldType.ToString();
-					param.Value = paramValue;	
+					param.Value = paramValue;
 					modeParams.Parameters.Add(param);
 				}
 				// UnityEngine objects save in cachedUnityObjects list which is serialized by Unity in UnityEditor
@@ -261,7 +272,7 @@ public class ObjectSerializer : MonoBehaviour
 					}
 					else
 					{
-						paramValue = p.GetValue(component, null).ToString();
+						paramValue = TypeDescriptor.GetConverter(p.PropertyType).ConvertToString(p.GetValue(component, null));
 					}
 
 					Parameter param = new Parameter();
@@ -302,7 +313,7 @@ public class ObjectSerializer : MonoBehaviour
 		// Build list that contains Components (only necessary information)
 		var trackableComponentsList = modeParams.Parameters.Select(i => i.ComponentName);
 		// Build list of gameObject's components that present in prev list
-		var trackableComponents = gameObject.GetComponents(typeof(Component)).Where(c => trackableComponentsList.Contains(c.GetType().ToString()));
+		var trackableComponents = gameObject.GetComponents(typeof(UnityEngine.Component)).Where(c => trackableComponentsList.Contains(c.GetType().ToString()));
 		// Go through particular gameObject's components only
 		foreach (var component in trackableComponents)
 		{
@@ -320,26 +331,23 @@ public class ObjectSerializer : MonoBehaviour
 					// If this is simple type then restore value
 					if (prm.ParamType != "CachedUnityObject")
 					{
-						object obj;
+						object obj = null;
+						var converter = TypeDescriptor.GetConverter(f.FieldType);
 
-						if (f.FieldType.IsEnum)
-						{
-							obj = Enum.Parse(f.FieldType, prm.Value);
-						}
-						else
+						if (!converter.CanConvertFrom(typeof(String)))
 						{
 							if (f.FieldType == typeof(Vector3))
 							{
 								obj = UnityTypesConverter.Vector3FromString(prm.Value);
 							}
-							else if (f.FieldType == typeof(Quaternion))
+							if (f.FieldType == typeof(Quaternion))
 							{
 								obj = UnityTypesConverter.QuaternionFromString(prm.Value);
 							}
-							else
-							{
-								obj = Convert.ChangeType(prm.Value, f.FieldType);
-							}
+						}
+						else
+						{
+							obj = converter.ConvertFromString(prm.Value);
 						}
 						f.SetValue(component, obj);
 					}
@@ -368,27 +376,25 @@ public class ObjectSerializer : MonoBehaviour
 					// If this is simple type then restore value
 					if (prm.ParamType != "CachedUnityObject")
 					{
-						object obj;
+						object obj = null;
+						var converter = TypeDescriptor.GetConverter(p.PropertyType);
 
-						if (p.PropertyType.IsEnum)
-						{
-							obj = Enum.Parse(p.PropertyType, prm.Value);
-						}
-						else
+						if (!converter.CanConvertFrom(typeof(String)))
 						{
 							if (p.PropertyType == typeof(Vector3))
 							{
 								obj = UnityTypesConverter.Vector3FromString(prm.Value);
 							}
-							else if (p.PropertyType == typeof(Quaternion))
+							if (p.PropertyType == typeof(Quaternion))
 							{
 								obj = UnityTypesConverter.QuaternionFromString(prm.Value);
 							}
-							else
-							{
-								obj = Convert.ChangeType(prm.Value, p.PropertyType);
-							}
 						}
+						else
+						{
+							obj = converter.ConvertFromString(prm.Value);
+						}
+							
 						p.SetValue(component, obj, null);
 					}
 					// Othervise take object from cache
@@ -398,7 +404,6 @@ public class ObjectSerializer : MonoBehaviour
 
 						if (cachedObj != default(CachedParameter))
 						{
-							Debug.Log(cachedObj.Value);
 							p.SetValue(component, cachedObj.Value, null);
 						}
 					}
