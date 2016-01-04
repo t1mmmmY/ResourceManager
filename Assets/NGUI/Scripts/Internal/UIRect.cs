@@ -4,59 +4,13 @@
 //----------------------------------------------
 
 using UnityEngine;
-using System;
-using System.ComponentModel;
-using System.Globalization;
-
-/// <summary>
-/// Abstract UI rectangle containing functionality common to both panels and widgets.
-/// A UI rectangle contains 4 anchor points (one for each side), and it ensures that they are updated in the proper order.
-/// </summary>
-
-class CustomUIRectConverter : TypeConverter
-{
-	public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
-	{
-		if (sourceType == typeof(string))
-		{
-			return true;
-		}
-		return base.CanConvertFrom(context, sourceType);
-	}
-
-	public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
-	{
-		if (value is string)
-		{
-			string[] parts = ((string)value).Split(new char[] {','});
-			return new CustomClass(parts[0], int.Parse(parts[1]), float.Parse(parts[2]));
-		}
-		return base.ConvertFrom(context, culture, value);
-	}
-
-	// Overrides the ConvertTo method of TypeConverter.
-	public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
-	{  
-		if (destinationType == typeof(string))
-		{
-			var obj = (UIRect)value;
-			return string.Format("{0:0.00000},{1},{2:0.00000},{3},{4:0.00000},{5},{6:0.00000},{7}", 
-				obj.leftAnchor.relative, obj.leftAnchor.absolute,
-				obj.rightAnchor.relative, obj.rightAnchor.absolute,
-				obj.topAnchor.relative, obj.topAnchor.absolute,
-				obj.bottomAnchor.relative, obj.bottomAnchor.absolute);
-		}
-		return base.ConvertTo(context, culture, value, destinationType);
-	}
-}
 
 
-
-
-[TypeConverter(typeof(CustomUIRectConverter))]
-[Serializable]
+[System.ComponentModel.TypeConverter(typeof(CustomUIRectConverter))]
+[System.Serializable]
 public abstract class UIRect : MonoBehaviour
 {
+	[System.ComponentModel.TypeConverter(typeof(CustomAnchorPointConverter))]
 	[System.Serializable]
 	public class AnchorPoint
 	{
@@ -173,6 +127,8 @@ public abstract class UIRect : MonoBehaviour
 			return null;
 		}
 	}
+
+	public UIRect thisRect;
 
 	/// <summary>
 	/// Left side anchor.
@@ -458,6 +414,7 @@ public abstract class UIRect : MonoBehaviour
 
 	protected virtual void OnInit ()
 	{
+		thisRect = this;
 		mChanged = true;
 		mRootSet = false;
 		mParentFound = false;

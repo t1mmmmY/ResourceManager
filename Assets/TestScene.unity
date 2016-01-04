@@ -109,7 +109,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 379359784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -103.75, y: -112.25, z: 0}
+  m_LocalPosition: {x: -63, y: 83.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 928798632}
@@ -125,32 +125,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b3dc54f924693f41b5cbecb267e647a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisRect: {fileID: 379359786}
   leftAnchor:
     target: {fileID: 928798632}
     relative: 0
-    absolute: 54
+    absolute: 130
   rightAnchor:
     target: {fileID: 928798632}
-    relative: 0.5
-    absolute: 24
+    relative: 0
+    absolute: 315
   bottomAnchor:
     target: {fileID: 928798632}
-    relative: 0
-    absolute: 46
+    relative: 1
+    absolute: -171
   topAnchor:
     target: {fileID: 928798632}
-    relative: 0.5
-    absolute: -74
+    relative: 1
+    absolute: -55
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 256
-  mHeight: 77
+  mWidth: 185
+  mHeight: 116
   mDepth: 0
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 3.3246753
+  aspectRatio: 1.6086956
   mType: 0
   mFillDirection: 4
   mFillAmount: 1
@@ -192,6 +193,11 @@ MonoBehaviour:
       - panel
       - fillGeometry
       - drawCall
+      - thisRect
+      - leftAnchor
+      - rightAnchor
+      - bottomAnchor
+      - topAnchor
       - updateAnchors
       - finalAlpha
       - atlas
@@ -238,13 +244,21 @@ MonoBehaviour:
       - tag
       - name
       - hideFlags
-      current: 0
-  cachedUnityObjects: []
-  _____________: 0
+      current: 12
+  cachedUnityObjects:
+  - Key: UISprite.thisRect
+    ModeGUID: e5c1d88f-9e9a-497b-a6ec-999d09d5ea69
+    Value: {fileID: 379359786}
+  - Key: UISprite.thisRect
+    ModeGUID: c09f8596-5ddd-41ee-a45c-d0a2c4eff404
+    Value: {fileID: 379359786}
+  _____________: 1
   modeAGUID: e5c1d88f-9e9a-497b-a6ec-999d09d5ea69
   modeBGUID: c09f8596-5ddd-41ee-a45c-d0a2c4eff404
-  serializedModeA: 
-  serializedModeB: 
+  serializedModeA: '{"GUID":"e5c1d88f-9e9a-497b-a6ec-999d09d5ea69","ModeName":"Mode
+    A","Parameters":[{"ComponentName":"UISprite","ParamName":"thisRect","ParamType":"UIRect","Value":"9058;{\"target\":{\"instanceID\":9070},\"relative\":0.0,\"absolute\":65};{\"target\":{\"instanceID\":9070},\"relative\":0.0,\"absolute\":315};{\"target\":{\"instanceID\":9070},\"relative\":0.75,\"absolute\":0};{\"target\":{\"instanceID\":9070},\"relative\":0.25,\"absolute\":0}"},{"ComponentName":"UISprite","ParamName":"thisRect","ParamType":"CachedUnityObject","Value":"UISprite.thisRect"}]}'
+  serializedModeB: '{"GUID":"c09f8596-5ddd-41ee-a45c-d0a2c4eff404","ModeName":"Mode
+    B","Parameters":[{"ComponentName":"UISprite","ParamName":"thisRect","ParamType":"UIRect","Value":"9058;{\"target\":{\"instanceID\":9070},\"relative\":0.0,\"absolute\":130};{\"target\":{\"instanceID\":9070},\"relative\":0.0,\"absolute\":315};{\"target\":{\"instanceID\":9070},\"relative\":1.0,\"absolute\":-55};{\"target\":{\"instanceID\":9070},\"relative\":1.0,\"absolute\":-171}"},{"ComponentName":"UISprite","ParamName":"thisRect","ParamType":"CachedUnityObject","Value":"UISprite.thisRect"}]}'
 --- !u!1 &928798628
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,10 +303,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae942c9068183dc40a9d01f648273726, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  thisRect: {fileID: 928798630}
   leftAnchor:
-    target: {fileID: 0}
+    target: {fileID: 928798632}
     relative: 0
-    absolute: 0
+    absolute: 54
   rightAnchor:
     target: {fileID: 0}
     relative: 1
@@ -542,7 +557,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1910490728}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.24894, y: 0.7295, z: 1.03711}
+  m_LocalPosition: {x: -9.78, y: 0.7295, z: 1.03711}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
