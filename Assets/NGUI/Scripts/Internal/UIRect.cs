@@ -10,7 +10,6 @@ using UnityEngine;
 [System.Serializable]
 public abstract class UIRect : MonoBehaviour
 {
-	[System.ComponentModel.TypeConverter(typeof(CustomAnchorPointConverter))]
 	[System.Serializable]
 	public class AnchorPoint
 	{
